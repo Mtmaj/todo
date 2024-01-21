@@ -1,6 +1,7 @@
 "use client"
 import { AddIcon, CheckIcon, CloseIcon, DeleteIcon, EditIcon, SettingsIcon } from "@chakra-ui/icons"
 import { HStack, VStack,Text,IconButton, Wrap, Avatar, Show, VisuallyHidden, Input } from "@chakra-ui/react"
+import { atom, useAtom } from "jotai";
 import Image from "next/image";
 import { useState } from "react"
 
@@ -13,6 +14,10 @@ var categorys_data:string[] = [
     "Game",
     "Programming"
 ]
+
+const selectDeletedCategory = atom([])
+
+const newCategory = atom([])
 
 import React, { Component } from "react";
 
@@ -125,48 +130,4 @@ export const Notes = ()=>{
     )
 }
 
-const CtaegorysItem = ({text,categorysSelect,setCategorysSelect,is_select,isEdit}:{text:string,categorysSelect:any,setCategorysSelect:any,is_select:boolean,isEdit:any})=>{
-  const [val,setVal] = useState(text)  
-  return (
-        <HStack background={is_select && !isEdit? color_shema.blue:"gray.600"} cursor={"pointer"} onClick={()=>{
-            var categorys_select_list = [...categorysSelect];
-            if(is_select){
-                categorys_select_list.splice(categorys_select_list.indexOf(text),1)
-            }else{
-                categorys_select_list.push(text)
-            }
-            setCategorysSelect([...categorys_select_list])
-        }} opacity={is_select && !isEdit?"1" : "0.5"} paddingX={"10px"} className="transition-all" color={"white"} py={"2px"} rounded={"full"}>
-            <Text fontWeight={"300"} hidden={isEdit} ># {text} <></></Text>
-            <Input id={text+"1"} variant={"none"} p={"0px"} w={"min-content"} color={"white"} background={"transparent"} size={"sm"} value={val} onChange={(e)=>{
-              setVal(e.currentTarget.value)
-            }} hidden={!isEdit}></Input>
-            <IconButton hidden={!isEdit} aria-label="Delete" mr={"-6px"} p={"0px"} bg={"transparent"} size={"sm"} _hover={{bg:color_shema.blue,color:"white"}} color={color_shema.blue} borderRadius={"full"} rounded={"full"} icon={<CloseIcon/>}></IconButton>
-        </HStack>
-    )
-}
-// @ts-ignore
-export const Categorys = ()=>{
-    const [categorysSelect,setCategorysSelect] = useState([])
-    const [isEdit,setIsEdit] = useState(false)
-    return (
-        <VStack padding={"15px"} background={"#EEF5FF"} borderRadius={"7px"} w={"95%"} alignItems={"start"} bg={color_shema.card_black}>
-            <HStack justifyContent={"space-between"} w={"full"}>
-                <Text color={"gray.50"} fontWeight={"400"}>My Categorys</Text>
-                <HStack>
-                    <IconButton hidden={isEdit} display={isEdit?"hidden":""} aria-label="Edit" onClick={()=>{setIsEdit(true)}} mr={"-6px"} rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={color_shema.blue} borderRadius={"full"} icon={<EditIcon/>}></IconButton>
-                    <IconButton hidden={!isEdit} display={isEdit?"hidden":""} aria-label="Check" onClick={()=>{setIsEdit(false)}} mr={"-6px"} rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={"green"} borderRadius={"full"} icon={<CheckIcon/>}></IconButton>
-                    <IconButton hidden={!isEdit} display={isEdit?"hidden":""} aria-label="Close" onClick={()=>{setIsEdit(false)}} mr={"-6px"} rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={"red"} borderRadius={"full"} icon={<CloseIcon fontSize={"12px"}/>}></IconButton>
-                </HStack>
-            </HStack>
-            <Wrap p={"3px"}>
-                
-                {categorys_data.map((item:string)=>{
-                    return (<CtaegorysItem text={item} isEdit={isEdit} categorysSelect={categorysSelect} setCategorysSelect={setCategorysSelect} is_select={categorysSelect.indexOf(item) != -1}/>)
-                })}
-                <IconButton aria-label="Add Category" icon={<AddIcon/>} size={"sm"} rounded={"full"} background={"gray.200"} opacity={"0.5"} _hover={{opacity:"1",color:"white",background:color_shema.blue}} > </IconButton>
-            </Wrap>
-            
-        </VStack>
-    )
-}
+
