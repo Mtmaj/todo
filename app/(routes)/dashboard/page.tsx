@@ -9,6 +9,7 @@ export default function Dashboard(){
         <HStack w={"full"} h={"full"} overflow={"hidden"} columnGap={"0px"} bg={color_shema.black}>
             <DrawerComponent/>
             <Box h={"full"} w={"1px"} bg={"gray.600"}></Box>
+            <PanelComponent />
         </HStack>
     )
 }

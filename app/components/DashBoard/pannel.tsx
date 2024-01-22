@@ -11,6 +11,8 @@ import { MdSort,MdFilterAlt } from "react-icons/md";
 import { SearchIcon,ChevronDownIcon,EditIcon,DeleteIcon,CheckIcon, AddIcon } from "@chakra-ui/icons";
 import { useState,useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+
+
 export default function PanelComponent(){
     const priority_color = {
         "High" : "red",
@@ -54,108 +56,6 @@ export default function PanelComponent(){
                         <MenuItem>Added Time</MenuItem>
                     </MenuList>
                 </Menu>
-            </HStack>
-
-            <HStack w={"full"} h={"full"} justifyContent={"start"} alignItems={"start"}>
-                <VStack alignItems={"start"} h={"fit-content"} maxH={"100%"} w={"full"} overflowY={"scroll"} rounded={"20px"} shadow={"md"} border={"1px"} bg={"white"} borderColor={"gray.200"} px={"15px"} py={"10px"} >
-                    <Text fontWeight={"900"} color={"#0083ff"} fontSize={"20px"}>Todo Task : </Text>
-                    <VStack w={"full"}>
-                        <VStack border={"1px"} w={"full"} alignItems={"start"} rounded={"15px"} borderColor={"gray.200"} shadow={"md"} p={"10px"} rowGap={"10px"}>
-                            <Heading fontSize={"16px"}>Write Home Work</Heading>
-                            <Text>Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima, facilis consectetur laborum t</Text>
-                            <HStack justifyContent={"space-between"}>
-                                <Text background={"blue.50"} paddingX={"10px"} py={"2px"} rounded={"full"}># HomeWork</Text>
-                            </HStack>
-                        </VStack>
-                        <VStack border={"1px"} w={"full"} alignItems={"start"} rounded={"15px"} borderColor={"gray.200"} shadow={"md"} p={"10px"} rowGap={"10px"}>
-                            <Heading fontSize={"16px"}>Write Home Work</Heading>
-                            <Text>Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima, facilis consectetur laborum t</Text>
-                            <HStack justifyContent={"space-between"}>
-                                <Text background={"blue.50"} paddingX={"10px"} py={"2px"} rounded={"full"}># HomeWork</Text>
-                            </HStack>
-                        </VStack>
-                        <VStack border={"1px"} w={"full"} alignItems={"start"} rounded={"15px"} borderColor={"gray.200"} shadow={"md"} p={"10px"} rowGap={"10px"}>
-                            <Heading fontSize={"16px"}>Write Home Work</Heading>
-                            <Text>Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima, facilis consectetur laborum t</Text>
-                            <HStack justifyContent={"space-between"}>
-                                <Text background={"blue.50"} paddingX={"10px"} py={"2px"} rounded={"full"}># HomeWork</Text>
-                            </HStack>
-                        </VStack>
-                        <VStack border={"1px"} w={"full"} alignItems={"start"} mb={"200px"} rounded={"15px"} borderColor={"gray.200"} shadow={"md"} p={"10px"} rowGap={"10px"}>
-                            <Heading fontSize={"16px"}>Write Home Work</Heading>
-                            <Text>Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima, facilis consectetur laborum t</Text>
-                            <HStack justifyContent={"space-between"}>
-                                <Text background={"blue.50"} paddingX={"10px"} py={"2px"} rounded={"full"}># HomeWork</Text>
-                            </HStack>
-                        </VStack>
-                    </VStack>
-                </VStack>
-                <VStack alignItems={"start"} h={"fit-content"} maxH={"100%"} w={"full"} overflowY={"scroll"} rounded={"20px"} shadow={"md"} bg={"#EEF5FF"}  px={"15px"} py={"10px"} >
-                    <Text fontWeight={"900"} color={"#0083ff"} fontSize={"20px"}>Doing Task : </Text>
-                    <VStack w={"full"}>
-                        <VStack border={"1px"} w={"full"} alignItems={"start"} rounded={"15px"} borderColor={"gray.200"} shadow={"md"} p={"10px"} rowGap={"10px"}>
-                            <Heading fontSize={"16px"}>Write Home Work</Heading>
-                            <Text>Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima, facilis consectetur laborum t</Text>
-                            <HStack justifyContent={"space-between"}>
-                                <Text background={"blue.50"} paddingX={"10px"} py={"2px"} rounded={"full"}># HomeWork</Text>
-                            </HStack>
-                        </VStack>
-                        <VStack border={"1px"} w={"full"} alignItems={"start"} rounded={"15px"} borderColor={"gray.200"} shadow={"md"} p={"10px"} rowGap={"10px"}>
-                            <Heading fontSize={"16px"}>Write Home Work</Heading>
-                            <Text>Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima, facilis consectetur laborum t</Text>
-                            <HStack justifyContent={"space-between"}>
-                                <Text background={"blue.50"} paddingX={"10px"} py={"2px"} rounded={"full"}># HomeWork</Text>
-                            </HStack>
-                        </VStack>
-                        <VStack border={"1px"} w={"full"} alignItems={"start"} rounded={"15px"} borderColor={"gray.200"} shadow={"md"} p={"10px"} rowGap={"10px"}>
-                            <Heading fontSize={"16px"}>Write Home Work</Heading>
-                            <Text>Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima, facilis consectetur laborum t</Text>
-                            <HStack justifyContent={"space-between"}>
-                                <Text background={"blue.50"} paddingX={"10px"} py={"2px"} rounded={"full"}># HomeWork</Text>
-                            </HStack>
-                        </VStack>
-                        <VStack border={"1px"} w={"full"} alignItems={"start"} mb={"200px"} rounded={"15px"} borderColor={"gray.200"} shadow={"md"} p={"10px"} rowGap={"10px"}>
-                            <Heading fontSize={"16px"}>Write Home Work</Heading>
-                            <Text>Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima, facilis consectetur laborum t</Text>
-                            <HStack justifyContent={"space-between"}>
-                                <Text background={"blue.50"} paddingX={"10px"} py={"2px"} rounded={"full"}># HomeWork</Text>
-                            </HStack>
-                        </VStack>
-                    </VStack>
-                </VStack>
-                <VStack alignItems={"start"} h={"fit-content"} maxH={"100%"} w={"full"} overflowY={"scroll"} rounded={"20px"} shadow={"md"} border={"1px"} bg={"white"} borderColor={"gray.200"} px={"15px"} py={"10px"} >
-                    <Text fontWeight={"900"} color={"#0083ff"} fontSize={"20px"}>Ended Task : </Text>
-                    <VStack w={"full"}>
-                        <VStack border={"1px"} w={"full"} alignItems={"start"} rounded={"15px"} borderColor={"gray.200"} shadow={"md"} p={"10px"} rowGap={"10px"}>
-                            <Heading fontSize={"16px"}>Write Home Work</Heading>
-                            <Text>Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima, facilis consectetur laborum t</Text>
-                            <HStack justifyContent={"space-between"}>
-                                <Text background={"blue.50"} paddingX={"10px"} py={"2px"} rounded={"full"}># HomeWork</Text>
-                            </HStack>
-                        </VStack>
-                        <VStack border={"1px"} w={"full"} alignItems={"start"} rounded={"15px"} borderColor={"gray.200"} shadow={"md"} p={"10px"} rowGap={"10px"}>
-                            <Heading fontSize={"16px"}>Write Home Work</Heading>
-                            <Text>Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima, facilis consectetur laborum t</Text>
-                            <HStack justifyContent={"space-between"}>
-                                <Text background={"blue.50"} paddingX={"10px"} py={"2px"} rounded={"full"}># HomeWork</Text>
-                            </HStack>
-                        </VStack>
-                        <VStack border={"1px"} w={"full"} alignItems={"start"} rounded={"15px"} borderColor={"gray.200"} shadow={"md"} p={"10px"} rowGap={"10px"}>
-                            <Heading fontSize={"16px"}>Write Home Work</Heading>
-                            <Text>Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima, facilis consectetur laborum t</Text>
-                            <HStack justifyContent={"space-between"}>
-                                <Text background={"blue.50"} paddingX={"10px"} py={"2px"} rounded={"full"}># HomeWork</Text>
-                            </HStack>
-                        </VStack>
-                        <VStack border={"1px"} w={"full"} alignItems={"start"} mb={"200px"} rounded={"15px"} borderColor={"gray.200"} shadow={"md"} p={"10px"} rowGap={"10px"}>
-                            <Heading fontSize={"16px"}>Write Home Work</Heading>
-                            <Text>Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima, facilis consectetur laborum t</Text>
-                            <HStack justifyContent={"space-between"}>
-                                <Text background={"blue.50"} paddingX={"10px"} py={"2px"} rounded={"full"}># HomeWork</Text>
-                            </HStack>
-                        </VStack>
-                    </VStack>
-                </VStack>
             </HStack>
 
         </VStack>

@@ -5,12 +5,9 @@ import { CheckIcon, CloseIcon, DeleteIcon, EditIcon,AddIcon } from "@chakra-ui/i
 import { useState } from "react";
 import { title } from "process";
 
-const notesData = atom([
-])
+const notesData = atom([])
 
-export const addNotes = atom(
-    []
-)
+export const addNotes = atom([])
 
 export const Add_Notes = ({title,text,index}:{title:string,text:string,index:number})=>{
     const [listNotes,setListNote] = useAtom(notesData)
@@ -97,7 +94,7 @@ export const Notes = ({title,text,index}:{title:string,text:string,index:number}
                 </HStack>
             </HStack>
             
-            <Text color={"gray.300"} opacity={"0.8"} hidden={isEdit} fontWeight={"300"}>{text}</Text>
+            <Text color={"gray.300"} opacity={"0.8"} hidden={isEdit} whiteSpace={"wrap"} w={"full"} fontWeight={"300"}>{text}</Text>
             <Textarea borderColor={color_shema.blue} w={"full"} h={"250px"} resize={"none"} variant={"outline"} color={"white"} hidden={!isEdit} overflow={"hidden"} value={TextVal} onChange={(e)=>{
                 setTextVal(e.currentTarget.value)
             }} ></Textarea>
@@ -116,7 +113,7 @@ export const ListNote = ()=>{
         {addList.map((item,index)=>{
             return <Add_Notes title={""} text="" index={index}  />
         })}
-        <Button hidden={addList.length > 0} bg={color_shema.card_black} color={"white"} size={"xl"} w={"95%"} p={"10px"} mb={"10px"} mx={"auto"} columnGap={"10px"} _hover={{color:"white",bg:color_shema.blue}} onClick={()=>{
+        <Button hidden={addList.length > 0} bg={color_shema.card_black} color={"white"} size={"xl"} w={"95%"} p={"10px"} mb={"10px"} mx={"auto"} fontWeight={"300"} columnGap={"10px"} _hover={{color:"white",bg:color_shema.blue}} onClick={()=>{
             var change_list = [...addList]
             change_list.push("")
             setAddList(change_list)
