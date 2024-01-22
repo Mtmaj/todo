@@ -113,21 +113,5 @@ export const Profile = ()=>{
     )
 }
 
-export const Notes = ()=>{
-    return (
-        <VStack padding={"15px"} mb={"10px"} bg={color_shema.card_black} shadow={"md"} borderRadius={"8px"} w={"95%"} alignItems={"start"}>
-            <HStack justifyContent={"space-between"} w={"full"}>
-                <Text color={"gray.50"} fontWeight={"400"}>My Note 1</Text>
-                <HStack>
-                <IconButton aria-label="Setting" rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={color_shema.blue} borderRadius={"full"} icon={<EditIcon/>}></IconButton>
-                <IconButton aria-label="Setting" rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={color_shema.blue} borderRadius={"full"} icon={<DeleteIcon/>}></IconButton>
-                </HStack>
-            </HStack>
-            
-            <Text color={"gray.300"} opacity={"0.8"} fontWeight={"300"}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae eaque dignissimos magnam eos itaque voluptatem error voluptas suscipit ipsa, expedita ad dicta! Doloremque maxime ullam reprehenderit dolorem. Tempora, expedita dolore!</Text>
-            
-        </VStack>
-    )
-}
 
 

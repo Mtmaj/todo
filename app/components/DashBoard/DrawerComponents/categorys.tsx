@@ -1,12 +1,21 @@
 "use client"
 import { AddIcon, CheckIcon, CloseIcon, DeleteIcon, EditIcon, SettingsIcon } from "@chakra-ui/icons"
-import { HStack, VStack,Text,IconButton, Wrap, Avatar, Show, VisuallyHidden, Input } from "@chakra-ui/react"
+import { HStack, VStack,Text,IconButton, Wrap, Avatar, Show, VisuallyHidden, Input, Button, useDisclosure } from "@chakra-ui/react"
 import { atom, useAtom } from "jotai";
 import Image from "next/image";
 import { useState } from "react"
 import { color_shema } from ".";
 
-
+import {
+    AlertDialog,
+    AlertDialogBody,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogContent,
+    AlertDialogOverlay,
+    AlertDialogCloseButton,
+  } from '@chakra-ui/react'
+import React from "react";
 const categorys_data = atom([])
 
 const selectDeletedCategory = atom<string[]>([])
@@ -14,8 +23,40 @@ const selectDeletedCategory = atom<string[]>([])
 var updateCategorys = []
 
 const newCategory = atom([])
+
+const DeleteAlert = ({isOpen,cancelRef,onClose,submit}:{isOpen:any,cancelRef:any,onClose:any,submit:any})=>{
+    return (
+    <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay >
+          <AlertDialogContent bg={color_shema.card_black}>
+            <AlertDialogHeader fontSize='lg' fontWeight='400' color={"white"}>
+              Delete Ctaegorys
+            </AlertDialogHeader>
+
+            <AlertDialogBody color={"gray.200"} fontWeight={"300"}>
+              Are you sure? You can't undo this action afterwards.This action Deleted Categorys and Removed All Children Task for this Category 
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                Cancel
+              </Button>
+              <Button colorScheme='red' onClick={()=>{submit();onClose()}} ml={3}>
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+    )
+}
+
 // @ts-ignore
-const AddInputComponent = ({index,isEdit}:{index:number,isEdit:boolean})=>{
+const AddInputComponent = ({index,isEdit,}:{index:number,isEdit:boolean})=>{
     const [listAdd,setListAdd] = useAtom(newCategory)
     return (
         <HStack background={"gray.600"} cursor={"pointer"} opacity={"0.5"} paddingX={"10px"} className="transition-all" color={"white"} py={"2px"} rounded={"full"}>
@@ -77,9 +118,10 @@ export const Categorys = ()=>{
       const [categoryDeleted,setCategoryDeleted] = useAtom(selectDeletedCategory)
       const [isEdit,setIsEdit] = useState(false)
       const [listAdd,setListAdd] = useAtom(newCategory)
+      const { isOpen, onOpen, onClose } = useDisclosure()
+      const cancelRef = React.useRef()
       updateCategorys = []
-
-      const SubmitChanges = ()=>{
+      const SubmitAction = ()=>{
         var list_category = [...categoryData]
         var categorys_select_list = [...categorysSelect]
         categoryDeleted.map((item,index)=>{
@@ -119,6 +161,14 @@ export const Categorys = ()=>{
         setCategoryDeleted([])
         setCategorysSelect([...categorys_select_list])
         setCtaegoryData([...list_category])
+        setIsEdit(false)
+      }
+      const SubmitChanges = ()=>{
+        if(categoryDeleted.length > 0){
+            onOpen()
+        }else{
+            SubmitAction()
+        }
       }
       const DiscardChanges = ()=>{
         setListAdd([])
@@ -132,8 +182,8 @@ export const Categorys = ()=>{
                   <Text color={"gray.50"} fontWeight={"400"}>My Categorys</Text>
                   <HStack>
                       <IconButton hidden={isEdit} display={isEdit?"hidden":""} aria-label="Edit" onClick={()=>{setIsEdit(true)}} mr={"-6px"} rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={color_shema.blue} borderRadius={"full"} icon={<EditIcon/>}></IconButton>
-                      <IconButton hidden={!isEdit} onClickCapture={SubmitChanges} display={isEdit?"hidden":""} aria-label="Check" onClick={()=>{setIsEdit(false)}} mr={"-6px"} rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={"green"} borderRadius={"full"} icon={<CheckIcon/>}></IconButton>
-                      <IconButton hidden={!isEdit} onClickCapture={DiscardChanges} display={isEdit?"hidden":""} aria-label="Close" onClick={()=>{setIsEdit(false)}} mr={"-6px"} rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={"red"} borderRadius={"full"} icon={<CloseIcon fontSize={"12px"}/>}></IconButton>
+                      <IconButton hidden={!isEdit} onClickCapture={SubmitChanges} display={isEdit?"hidden":""} aria-label="Check" mr={"-6px"} rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={"green"} borderRadius={"full"} icon={<CheckIcon/>}></IconButton>
+                      <IconButton hidden={!isEdit} onClickCapture={DiscardChanges} display={isEdit?"hidden":""} aria-label="Close"  mr={"-6px"} rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={"red"} borderRadius={"full"} icon={<CloseIcon fontSize={"12px"}/>}></IconButton>
                   </HStack>
               </HStack>
               <Wrap p={"3px"}>
@@ -161,7 +211,7 @@ export const Categorys = ()=>{
                     }
                   } > </IconButton>
               </Wrap>
-              
+              <DeleteAlert cancelRef={cancelRef} isOpen={isOpen} onClose={onClose} submit={SubmitAction}  />
           </VStack>
       )
   }
