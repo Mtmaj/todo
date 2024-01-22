@@ -11,6 +11,7 @@ import { MdSort,MdFilterAlt } from "react-icons/md";
 import { SearchIcon,ChevronDownIcon,EditIcon,DeleteIcon,CheckIcon, AddIcon } from "@chakra-ui/icons";
 import { useState,useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { color_shema } from "./DrawerComponents";
 
 
 export default function PanelComponent(){
@@ -26,34 +27,34 @@ export default function PanelComponent(){
             <Box position={"absolute"} display={"flex"} className="pointer-events-none" justifyContent={"end"} alignItems={"end"} zIndex={"10"} w={"full"} h="full" p={"40px"}>
                 <IconButton aria-label="Add Task" onClick={onOpen} variant={"solid"} className="pointer-events-auto drop-shadow-xl shadow-xl" size={"lg"} bgColor={"blue.400"} color={"white"} _hover={{color:"black",backgroundColor:"gray.100"}} isRound={true} icon={<AddIcon />} ></IconButton>
             </Box>
-            <Heading size={"lg"}>My Tasks</Heading>
+            <Heading size={"lg"} color={"gray.50"} fontWeight={"400"}>My Tasks</Heading>
             <HStack w={"full"} columnGap={"10px"}>
-                <InputGroup variant={"filled"}>
-                    <Input placeholder="Search In Your Tasks"></Input>
+                <InputGroup variant={"filled"} bg={color_shema.card_black} rounded={"10px"} color={"gray.300"} _hover={{bg:color_shema.card_black}} border={color_shema.blue + " !important"}>
+                    <Input placeholder="Search In Your Tasks" backgroundColor={color_shema.card_black} _hover={{bg:color_shema.card_black}}  _focus={{border:"1px",borderColor:color_shema.blue}}></Input>
                     <InputRightElement>
-                        <SearchIcon />
+                        <SearchIcon color={color_shema.blue} />
                     </InputRightElement>
                 </InputGroup>
                 <Menu>
-                    <MenuButton variant={"outline"} as={Button} leftIcon={<MdFilterAlt />} minW={"fit-content"} rightIcon={<ChevronDownIcon />}>
+                    <MenuButton variant={"filled"} bg={color_shema.card_black} color={"gray.50"} fontWeight={"300"} _hover={{opacity:"1"}} opacity={"0.6"} as={Button} leftIcon={<MdFilterAlt />} minW={"fit-content"} rightIcon={<ChevronDownIcon />}>
                         Filter
                     </MenuButton>
-                    <MenuList>
-                        <MenuItem>High</MenuItem>
-                        <MenuItem>Medium</MenuItem>
-                        <MenuItem>Low</MenuItem>
-                        <MenuItem>No Filter</MenuItem>
+                    <MenuList bg={color_shema.card_black} color={"gray.50"} border={"0px"}>
+                        <MenuItem bg={color_shema.card_black} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}}>High</MenuItem>
+                        <MenuItem bg={color_shema.card_black} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}} >Medium</MenuItem>
+                        <MenuItem bg={color_shema.card_black} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}} >Low</MenuItem>
+                        <MenuItem bg={color_shema.card_black} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}} >No Filter</MenuItem>
                     </MenuList>
                 </Menu>
                 <Menu>
-                    <MenuButton variant={"outline"} as={Button} minW={"fit-content"} leftIcon={<MdSort />} rightIcon={<ChevronDownIcon />}>
+                    <MenuButton variant={"filled"} bg={color_shema.card_black} color={"gray.50"} fontWeight={"300"} _hover={{opacity:"1"}} opacity={"0.6"} as={Button} minW={"fit-content"} leftIcon={<MdSort />} rightIcon={<ChevronDownIcon />}>
                         Sort
                     </MenuButton>
-                    <MenuList>
-                        <MenuItem>Name</MenuItem>
-                        <MenuItem>Date</MenuItem>
-                        <MenuItem>Prority</MenuItem>
-                        <MenuItem>Added Time</MenuItem>
+                    <MenuList bg={color_shema.card_black} border={"0px"}>
+                        <MenuItem bg={color_shema.card_black} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}} >Name</MenuItem>
+                        <MenuItem bg={color_shema.card_black} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}} >Date</MenuItem>
+                        <MenuItem bg={color_shema.card_black} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}} >Prority</MenuItem>
+                        <MenuItem bg={color_shema.card_black} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}} >Added Time</MenuItem>
                     </MenuList>
                 </Menu>
             </HStack>
