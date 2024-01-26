@@ -69,6 +69,7 @@ const ItemsTask = ({isRun,title,descriptions,category,priority,date,item})=>{
     const [doingTask,setDoingTask] = useAtom(doing_task)
     const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
     const rean = async ()=>{
+        await sleep(100)
         set_column_ref("1fr")
         setIsRunned(false)
     }
