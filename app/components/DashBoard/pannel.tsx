@@ -9,7 +9,7 @@ import {
 
 import { MdSort,MdFilterAlt } from "react-icons/md";
 import { SearchIcon,ChevronDownIcon,EditIcon,DeleteIcon,CheckIcon, AddIcon, ArrowForwardIcon } from "@chakra-ui/icons";
-import { useState,useRef, useEffect } from "react";
+import { useState,useRef, useEffect, useId } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { color_shema } from "./DrawerComponents";
 import { atom, useAtom } from "jotai";
@@ -63,12 +63,14 @@ const ItemsTask = ({isRun,title,descriptions,category,priority,date,item})=>{
         "Medium" : "gray",
         "Low" : "green"
     }
-    const [column_ref,set_column_ref] = useState("1fr")
+    const [column_ref,set_column_ref] = useState("0fr")
     const [isRunned,setIsRunned] = useState(isRun)
     const [tasksTodo,setTasksTodo] = useAtom(tasks_todo)
     const [doingTask,setDoingTask] = useAtom(doing_task)
     const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
     const rean = async ()=>{
+        set_column_ref("0fr")
+        sleep(500)
         set_column_ref("1fr")
         setIsRunned(false)
     }
@@ -77,6 +79,7 @@ const ItemsTask = ({isRun,title,descriptions,category,priority,date,item})=>{
         if(isRunned){
             rean()
         }
+        
     })
     const ToDoing = async ()=>{
         set_column_ref("0fr")
@@ -90,14 +93,30 @@ const ItemsTask = ({isRun,title,descriptions,category,priority,date,item})=>{
         setTasksTodo([...tt])
         set_column_ref("1fr")
     }
+
+    const DeleteTask = ()=>{
+        set_column_ref("0fr")
+        var isDoing = false
+        if (tasksTodo.findIndex((i)=>i.id == item.id) == -1){
+            isDoing = true
+        }
+        if(isDoing){
+            var tt = [...doingTask]
+        }else{
+            var tt = [...tasksTodo]
+        }
+        var index_remove =  tt.findIndex((i)=>i.id == item.id)
+        tt.splice(index_remove,1)
+        isDoing?setDoingTask([...tt]) : setTasksTodo([...tt])
+    }
     return (
-    <div className="w-full" className={" " + (column_ref == "1fr"?"duration-0 delay-0 transition-all":"duration-[600ms] ")} style={{"display":"grid","gridTemplateRows":column_ref}} >
-        <VStack borderLeft={"2px "+priority_color[priority]+" solid"} border={column_ref == "0fr"? "!border-transparent" : ""} overflow={"hidden"}  className="transition-all task-blur duration-[500ms]" w={"full"} bg={color_shema.black}  justify={"start"} px={"15px"} py={column_ref == "1fr"?"15px":"0px"} alignItems={"start"} rounded={"8px"} >
+    <div className="w-full" className={" " + ("duration-[500ms] transition-al")} style={{"display":"grid","gridTemplateRows":column_ref}} >
+        <VStack mb={column_ref == "1fr"?"5px":"0px"} borderLeft={"2px "+priority_color[priority]+" solid"} border={column_ref == "0fr"? "!border-transparent" : ""} overflow={"hidden"}  className="transition-all task-blur duration-[500ms]" w={"full"} bg={color_shema.black}  justify={"start"} px={"15px"} py={column_ref == "1fr"?"15px":"0px"} alignItems={"start"} rounded={"8px"} >
             <HStack justifyContent={"space-between"} alignItems={"center"} w={"100%"} >
                 <Text color={"gray.200"} fontSize={"15px"} fontWeight={"500"}>{title}</Text>
                 <HStack>
                     <IconButton aria-label="Setting" rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={color_shema.blue} borderRadius={"full"} icon={<EditIcon/>} ></IconButton>
-                    <IconButton aria-label="Setting" rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={color_shema.blue} borderRadius={"full"} onClick={()=>{set_column_ref("0fr")}} icon={<DeleteIcon/>}></IconButton>
+                    <IconButton aria-label="Setting" rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={color_shema.blue} borderRadius={"full"} onClick={DeleteTask} icon={<DeleteIcon/>}></IconButton>
                 </HStack>
             </HStack>
             <Text mt={"-2px"} ml={"5px"} color={"gray.300"} fontSize={"14px"} textOverflow={"clip"}>{descriptions}</Text>
@@ -111,6 +130,30 @@ const ItemsTask = ({isRun,title,descriptions,category,priority,date,item})=>{
             </HStack>
         </VStack>
     </div>)
+}
+
+const TaskPannel = ({mTaskTodo,doingTask})=>{
+    return (
+        <HStack w={"full"} h={"full"} justifyContent={"start"} alignItems={"start"}>
+            <VStack  style={{maxHeight:"80%"}} w={"400px"} className="card-blur-blue transition-all" rowGap={"10px"} rounded={"8px"} px={"10px"} alignItems={"start"} bg={color_shema.card_black} h={"fit-content"}>
+                <Text color={"gray.100"} fontWeight={"400"} mt={"15px"} fontSize={"17px"}>Tasks</Text>
+                <VStack gap={"0px"} w={"full"} className="transition-all" h={"fit-content"} maxHeight={"100%"} overflowY={"scroll"}  mb={"10px"} >
+                    {mTaskTodo.map((item,index)=>{
+                        return <ItemsTask key={item.id} item={item} title={item.title} descriptions={item.descriptions} date={item.date} category={item.category} priority={item.priority} isRun={true}  />
+                    })}
+                    
+                </VStack>
+            </VStack>
+            <VStack  style={{maxHeight:"80%"}} w={"400px"} className="card-blur-blue" rounded={"8px"} px={"10px"} alignItems={"start"} bg={color_shema.card_black} h={"fit-content"}>
+                <Text color={"gray.100"} fontWeight={"400"} mt={"15px"} fontSize={"17px"}>Doing Task</Text>
+                <VStack gap={"0px"} flexDirection={"column"} w={"full"} h={"fit-content"} maxHeight={"100%"} overflowY={"scroll"}  rowGap={"10px"} mb={"10px"} >
+                    {doingTask.map((item,index)=>{
+                        return <ItemsTask key={item.id} item={item} title={item.title} descriptions={item.descriptions} date={item.date} category={item.category} priority={item.priority} isRun={true}  />
+                    })}
+                </VStack>
+            </VStack>
+        </HStack>
+    )
 }
 
 export default function PanelComponent(){
@@ -160,25 +203,7 @@ export default function PanelComponent(){
                     </MenuList>
                 </Menu>
             </HStack> 
-            <HStack w={"full"} h={"full"} justifyContent={"start"} alignItems={"start"}>
-                <VStack style={{maxHeight:"80%"}} w={"400px"} className="card-blur-blue" rowGap={"10px"} rounded={"8px"} px={"10px"} alignItems={"start"} bg={color_shema.card_black} h={"fit-content"}>
-                    <Text color={"gray.100"} fontWeight={"400"} mt={"15px"} fontSize={"17px"}>Tasks</Text>
-                    <VStack w={"full"} h={"fit-content"} maxHeight={"100%"} overflowY={"scroll"}  rowGap={"10px"} mb={"10px"} >
-                        {mTaskTodo.map((item)=>{
-                            return <ItemsTask item={item} title={item.title} descriptions={item.descriptions} date={item.date} category={item.category} priority={item.priority} isRun={true}  />
-                        })}
-                        
-                    </VStack>
-                </VStack>
-                <VStack style={{maxHeight:"80%"}} w={"400px"} className="card-blur-blue" rowGap={"10px"} rounded={"8px"} px={"10px"} alignItems={"start"} bg={color_shema.card_black} h={"fit-content"}>
-                    <Text color={"gray.100"} fontWeight={"400"} mt={"15px"} fontSize={"17px"}>Doing Task</Text>
-                    <VStack  flexDirection={"column"} w={"full"} h={"fit-content"} maxHeight={"100%"} overflowY={"scroll"}  rowGap={"10px"} mb={"10px"} >
-                        {doingTask.map((item)=>{
-                            return <ItemsTask item={item} title={item.title} descriptions={item.descriptions} date={item.date} category={item.category} priority={item.priority} isRun={true}  />
-                        })}
-                    </VStack>
-                </VStack>
-            </HStack>
+            <TaskPannel doingTask={doingTask} mTaskTodo={mTaskTodo} />
         </VStack>
     )
 }
