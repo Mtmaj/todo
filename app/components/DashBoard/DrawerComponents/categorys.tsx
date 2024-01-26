@@ -173,6 +173,7 @@ export const Categorys = ()=>{
       const DiscardChanges = ()=>{
         setListAdd([])
         setCategoryDeleted([])
+        setIsEdit(false)
       }
 
       

@@ -8,19 +8,121 @@ import {
   } from '@chakra-ui/react'
 
 import { MdSort,MdFilterAlt } from "react-icons/md";
-import { SearchIcon,ChevronDownIcon,EditIcon,DeleteIcon,CheckIcon, AddIcon } from "@chakra-ui/icons";
-import { useState,useRef } from "react";
+import { SearchIcon,ChevronDownIcon,EditIcon,DeleteIcon,CheckIcon, AddIcon, ArrowForwardIcon } from "@chakra-ui/icons";
+import { useState,useRef, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { color_shema } from "./DrawerComponents";
+import { atom, useAtom } from "jotai";
 
 
-export default function PanelComponent(){
+const tasks_todo = atom(
+    [
+        {
+            id : "1",
+            title : "Write HomeWork",
+            descriptions : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga fugit pariatur beatae praesentium aut iste! Et, quaerat? Voluptatum laborum culpa autem cupiditate, animi, esse hic dignissimos sapiente nulla neque illum!",
+            category : "School",
+            priority : "High",
+            date : "1/25/2024 11:41" 
+        },
+        {
+            id : "2",
+            title : "Programming",
+            descriptions : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga fugit pariatur beatae praesentium aut iste! Et, quaerat? Voluptatum laborum culpa autem cupiditate, animi, esse hic dignissimos sapiente nulla neque illum!",
+            category : "Work",
+            priority : "Medium" ,
+            date : "1/25/2024 11:41"
+        },
+        {
+            id : "3",
+            title : "Play Game",
+            descriptions : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga fugit pariatur beatae praesentium aut iste! Et, quaerat? Voluptatum laborum culpa autem cupiditate, animi, esse hic dignissimos sapiente nulla neque illum!",
+            category : "School",
+            priority : "Low",
+            date : "1/25/2024 11:41"
+        },
+        {
+            id : "4",
+            title : "Create Web",
+            descriptions : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga fugit pariatur beatae praesentium aut iste! Et, quaerat? Voluptatum laborum culpa autem cupiditate, animi, esse hic dignissimos sapiente nulla neque illum!",
+            category : "Home",
+            priority : "High",
+            date : "1/25/2024 11:41"
+        }
+    ]
+);
+
+const doing_task = atom([]);
+
+
+
+
+const ItemsTask = ({isRun,title,descriptions,category,priority,date,item})=>{
     const priority_color = {
         "High" : "red",
-        "Medium" : "gray.300",
+        "Medium" : "gray",
         "Low" : "green"
     }
+    const [column_ref,set_column_ref] = useState("1fr")
+    const [isRunned,setIsRunned] = useState(isRun)
+    const [tasksTodo,setTasksTodo] = useAtom(tasks_todo)
+    const [doingTask,setDoingTask] = useAtom(doing_task)
+    const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
+    const rean = async ()=>{
+        set_column_ref("1fr")
+        setIsRunned(false)
+    }
+    useEffect( ()=> {
+        
+        if(isRunned){
+            rean()
+        }
+    })
+    const ToDoing = async ()=>{
+        set_column_ref("0fr")
+        var dt = [item,...doingTask]
+        setDoingTask([...dt])
+        await sleep(500)
+        
+        var tt = [...tasksTodo]
+        var index_remove =  tt.findIndex((i)=>i.id == item.id)
+        tt.splice(index_remove,1)
+        setTasksTodo([...tt])
+        set_column_ref("1fr")
+    }
+    return (
+    <div className="w-full" className={" " + (column_ref == "1fr"?"duration-0 delay-0 transition-all":"duration-[600ms] ")} style={{"display":"grid","gridTemplateRows":column_ref}} >
+        <VStack borderLeft={"2px "+priority_color[priority]+" solid"} border={column_ref == "0fr"? "!border-transparent" : ""} overflow={"hidden"}  className="transition-all task-blur duration-[500ms]" w={"full"} bg={color_shema.black}  justify={"start"} px={"15px"} py={column_ref == "1fr"?"15px":"0px"} alignItems={"start"} rounded={"8px"} >
+            <HStack justifyContent={"space-between"} alignItems={"center"} w={"100%"} >
+                <Text color={"gray.200"} fontSize={"15px"} fontWeight={"500"}>{title}</Text>
+                <HStack>
+                    <IconButton aria-label="Setting" rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={color_shema.blue} borderRadius={"full"} icon={<EditIcon/>} ></IconButton>
+                    <IconButton aria-label="Setting" rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={color_shema.blue} borderRadius={"full"} onClick={()=>{set_column_ref("0fr")}} icon={<DeleteIcon/>}></IconButton>
+                </HStack>
+            </HStack>
+            <Text mt={"-2px"} ml={"5px"} color={"gray.300"} fontSize={"14px"} textOverflow={"clip"}>{descriptions}</Text>
+            <HStack alignItems={"center"} mt={"5px"} mb={"-5px"} fontSize={"14px"} justifyContent={"space-between"} w={"full"}>
+                <HStack>
+                    <Text color={"gray.300"} borderColor={color_shema.blue}  _hover={{bg:color_shema.blue}} cursor={"pointer"} className="transition-all" borderWidth={"1px"} px={"10px"} py={"3px"} rounded={"full"}># {category}</Text>
+                    <Text color={"gray.500"}>{date}</Text>
+                </HStack>
+               
+                <IconButton onClick={ToDoing} icon={<ArrowForwardIcon />} color={"gray.300"} borderColor={color_shema.blue} size={"sm"}  borderWidth={"1px"} _hover={{bg:color_shema.blue}} className="transition-all" bg={"transparent"} rounded={"full"} ></IconButton>
+            </HStack>
+        </VStack>
+    </div>)
+}
+
+export default function PanelComponent(){
     const { isOpen, onOpen, onClose } = useDisclosure()
+    const [tasksTodo,setTasksTodo] = useAtom(tasks_todo)
+    const [doingTask,setDoingTask] = useAtom(doing_task)
+    var mTaskTodo = [...tasksTodo]
+    useEffect(()=>{
+        let maxY = window.scrollMaxY;
+
+        window.scrollTo(0, maxY);
+    })
     const btnRef = useRef()
     return (
         <VStack h={"full"} w={"full"} justifyContent={"start"} alignItems={"start"} p={"20px"} overflow={"hidden"} pb={"0px"} position={"relative"} rowGap={"20px"} >
@@ -57,8 +159,26 @@ export default function PanelComponent(){
                         <MenuItem bg={color_shema.card_black} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}} >Added Time</MenuItem>
                     </MenuList>
                 </Menu>
+            </HStack> 
+            <HStack w={"full"} h={"full"} justifyContent={"start"} alignItems={"start"}>
+                <VStack style={{maxHeight:"80%"}} w={"400px"} className="card-blur-blue" rowGap={"10px"} rounded={"8px"} px={"10px"} alignItems={"start"} bg={color_shema.card_black} h={"fit-content"}>
+                    <Text color={"gray.100"} fontWeight={"400"} mt={"15px"} fontSize={"17px"}>Tasks</Text>
+                    <VStack w={"full"} h={"fit-content"} maxHeight={"100%"} overflowY={"scroll"}  rowGap={"10px"} mb={"10px"} >
+                        {mTaskTodo.map((item)=>{
+                            return <ItemsTask item={item} title={item.title} descriptions={item.descriptions} date={item.date} category={item.category} priority={item.priority} isRun={true}  />
+                        })}
+                        
+                    </VStack>
+                </VStack>
+                <VStack style={{maxHeight:"80%"}} w={"400px"} className="card-blur-blue" rowGap={"10px"} rounded={"8px"} px={"10px"} alignItems={"start"} bg={color_shema.card_black} h={"fit-content"}>
+                    <Text color={"gray.100"} fontWeight={"400"} mt={"15px"} fontSize={"17px"}>Doing Task</Text>
+                    <VStack  flexDirection={"column"} w={"full"} h={"fit-content"} maxHeight={"100%"} overflowY={"scroll"}  rowGap={"10px"} mb={"10px"} >
+                        {doingTask.map((item)=>{
+                            return <ItemsTask item={item} title={item.title} descriptions={item.descriptions} date={item.date} category={item.category} priority={item.priority} isRun={true}  />
+                        })}
+                    </VStack>
+                </VStack>
             </HStack>
-
         </VStack>
     )
 }

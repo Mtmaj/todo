@@ -68,6 +68,14 @@ div::-webkit-scrollbar-track {
   border: 2px solid #fff;
 }
 
+.card-blur-blue{
+  backdrop-filter: blur(3px) saturate(180%);
+  -webkit-backdrop-filter: blur(13px) saturate(180%);
+  background-color: rgb(21 112 239 / 8%) !important;
+  /* border-radius: 14px; */
+  /* border: 1px solid rgba(255, 255, 255, 0.125); */
+}
+
 .hour_hand {
   position: absolute;
   width: 6px;
@@ -78,6 +86,13 @@ div::-webkit-scrollbar-track {
   transform-origin: bottom;
 }
 
+.task-blur{
+  background: rgba( 0, 0, 0, 0.8 ) !important;
+  box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+  backdrop-filter: blur( 10.5px );
+  -webkit-backdrop-filter: blur( 10.5px );
+  border-radius: 10px;
+}
 .min_hand {
   position: absolute;
   width: 4px;
