@@ -29,6 +29,8 @@ body,html{
 }
 div::-webkit-scrollbar {
   width: 0px;
+  height: 5px;
+  padding: 2px 1px;
   
 }
  

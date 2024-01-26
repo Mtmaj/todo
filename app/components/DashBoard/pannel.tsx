@@ -8,7 +8,7 @@ import {
   } from '@chakra-ui/react'
 
 import { MdSort,MdFilterAlt } from "react-icons/md";
-import { SearchIcon,ChevronDownIcon,EditIcon,DeleteIcon,CheckIcon, AddIcon, ArrowForwardIcon } from "@chakra-ui/icons";
+import { SearchIcon,ChevronDownIcon,EditIcon,DeleteIcon,CheckIcon, AddIcon, ArrowForwardIcon, ArrowBackIcon } from "@chakra-ui/icons";
 import { useState,useRef, useEffect, useId } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { color_shema } from "./DrawerComponents";
@@ -16,40 +16,44 @@ import { atom, useAtom } from "jotai";
 
 
 const tasks_todo = atom(
-    [
-        {
-            id : "1",
-            title : "Write HomeWork",
-            descriptions : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga fugit pariatur beatae praesentium aut iste! Et, quaerat? Voluptatum laborum culpa autem cupiditate, animi, esse hic dignissimos sapiente nulla neque illum!",
-            category : "School",
-            priority : "High",
-            date : "1/25/2024 11:41" 
-        },
-        {
-            id : "2",
-            title : "Programming",
-            descriptions : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga fugit pariatur beatae praesentium aut iste! Et, quaerat? Voluptatum laborum culpa autem cupiditate, animi, esse hic dignissimos sapiente nulla neque illum!",
-            category : "Work",
-            priority : "Medium" ,
-            date : "1/25/2024 11:41"
-        },
-        {
-            id : "3",
-            title : "Play Game",
-            descriptions : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga fugit pariatur beatae praesentium aut iste! Et, quaerat? Voluptatum laborum culpa autem cupiditate, animi, esse hic dignissimos sapiente nulla neque illum!",
-            category : "School",
-            priority : "Low",
-            date : "1/25/2024 11:41"
-        },
-        {
-            id : "4",
-            title : "Create Web",
-            descriptions : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga fugit pariatur beatae praesentium aut iste! Et, quaerat? Voluptatum laborum culpa autem cupiditate, animi, esse hic dignissimos sapiente nulla neque illum!",
-            category : "Home",
-            priority : "High",
-            date : "1/25/2024 11:41"
-        }
-    ]
+    {
+        "Tasks" : [
+            {
+                id : "1",
+                title : "Write HomeWork",
+                descriptions : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga fugit pariatur beatae praesentium aut iste! Et, quaerat? Voluptatum laborum culpa autem cupiditate, animi, esse hic dignissimos sapiente nulla neque illum!",
+                category : "School",
+                priority : "High",
+                date : "1/25/2024 11:41" 
+            },
+            {
+                id : "2",
+                title : "Programming",
+                descriptions : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga fugit pariatur beatae praesentium aut iste! Et, quaerat? Voluptatum laborum culpa autem cupiditate, animi, esse hic dignissimos sapiente nulla neque illum!",
+                category : "Work",
+                priority : "Medium" ,
+                date : "1/25/2024 11:41"
+            },
+            {
+                id : "3",
+                title : "Play Game",
+                descriptions : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga fugit pariatur beatae praesentium aut iste! Et, quaerat? Voluptatum laborum culpa autem cupiditate, animi, esse hic dignissimos sapiente nulla neque illum!",
+                category : "School",
+                priority : "Low",
+                date : "1/25/2024 11:41"
+            },
+            {
+                id : "4",
+                title : "Create Web",
+                descriptions : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga fugit pariatur beatae praesentium aut iste! Et, quaerat? Voluptatum laborum culpa autem cupiditate, animi, esse hic dignissimos sapiente nulla neque illum!",
+                category : "Home",
+                priority : "High",
+                date : "1/25/2024 11:41"
+            }
+        ],
+        "Doing Tasks" : [],
+        "Finished Tasks" : [],
+    }
 );
 
 const doing_task = atom([]);
@@ -57,7 +61,7 @@ const doing_task = atom([]);
 
 
 
-const ItemsTask = ({isRun,title,descriptions,category,priority,date,item})=>{
+const ItemsTask = ({isRun,title,descriptions,category,priority,date,item,tabName})=>{
     const priority_color = {
         "High" : "red",
         "Medium" : "gray",
@@ -80,34 +84,45 @@ const ItemsTask = ({isRun,title,descriptions,category,priority,date,item})=>{
         }
         
     })
-    const ToDoing = async ()=>{
+    const ToNext = async ()=>{
         set_column_ref("0fr")
-        var dt = [item,...doingTask]
-        setDoingTask([...dt])
+        var task_list = {...tasksTodo}
+        var next_list = task_list[Object.keys(task_list)[Object.keys(task_list).indexOf(tabName) + 1]]
+        var dt = [item,...next_list]
+        task_list[Object.keys(task_list)[Object.keys(task_list).indexOf(tabName) + 1]] = [...dt]
+        setTasksTodo({...task_list})
         await sleep(500)
-        
-        var tt = [...tasksTodo]
+        var tt = [...task_list[tabName]]
         var index_remove =  tt.findIndex((i)=>i.id == item.id)
         tt.splice(index_remove,1)
-        setTasksTodo([...tt])
-        set_column_ref("1fr")
+        task_list[tabName] = [...tt]
+        setTasksTodo({...task_list})
+    }
+    
+    const ToPrev = async ()=>{
+        set_column_ref("0fr")
+        var task_list = {...tasksTodo}
+        var last_list = task_list[Object.keys(task_list)[Object.keys(task_list).indexOf(tabName) - 1]]
+        var dt = [item,...last_list]
+        task_list[Object.keys(task_list)[Object.keys(task_list).indexOf(tabName) - 1]] = [...dt]
+        setTasksTodo({...task_list})
+        await sleep(500)
+        var tt = [...task_list[tabName]]
+        var index_remove =  tt.findIndex((i)=>i.id == item.id)
+        tt.splice(index_remove,1)
+        task_list[tabName] = [...tt]
+        setTasksTodo({...task_list})
     }
 
     const DeleteTask = async ()=>{
         set_column_ref("0fr")
         await sleep(500)
-        var isDoing = false
-        if (tasksTodo.findIndex((i)=>i.id == item.id) == -1){
-            isDoing = true
-        }
-        if(isDoing){
-            var tt = [...doingTask]
-        }else{
-            var tt = [...tasksTodo]
-        }
+        var task_list = {...tasksTodo}
+        var tt = [...task_list[tabName]]
         var index_remove =  tt.findIndex((i)=>i.id == item.id)
         tt.splice(index_remove,1)
-        isDoing?setDoingTask([...tt]) : setTasksTodo([...tt])
+        task_list[tabName] = [...tt]
+        setTasksTodo({...task_list})
     }
     return (
     <div className="w-full" className={" " + ("duration-[500ms] transition-al")} style={{"display":"grid","gridTemplateRows":column_ref}} >
@@ -125,33 +140,39 @@ const ItemsTask = ({isRun,title,descriptions,category,priority,date,item})=>{
                     <Text color={"gray.300"} borderColor={color_shema.blue}  _hover={{bg:color_shema.blue}} cursor={"pointer"} className="transition-all" borderWidth={"1px"} px={"10px"} py={"3px"} rounded={"full"}># {category}</Text>
                     <Text color={"gray.500"}>{date}</Text>
                 </HStack>
-               
-                <IconButton onClick={ToDoing} icon={<ArrowForwardIcon />} color={"gray.300"} borderColor={color_shema.blue} size={"sm"}  borderWidth={"1px"} _hover={{bg:color_shema.blue}} className="transition-all" bg={"transparent"} rounded={"full"} ></IconButton>
+
+                <HStack>
+                <IconButton hidden={Object.keys(tasksTodo).indexOf(tabName) > 0?false:true} onClick={ToPrev} icon={<ArrowBackIcon />} color={"gray.300"} borderColor={color_shema.blue} size={"sm"}  borderWidth={"1px"} _hover={{bg:color_shema.blue}} className="transition-all" bg={"transparent"} rounded={"full"} ></IconButton>
+                    <IconButton hidden={Object.keys(tasksTodo).indexOf(tabName) < Object.keys(tasksTodo).length - 1?false:true} onClick={ToNext} icon={<ArrowForwardIcon />} color={"gray.300"} borderColor={color_shema.blue} size={"sm"}  borderWidth={"1px"} _hover={{bg:color_shema.blue}} className="transition-all" bg={"transparent"} rounded={"full"} ></IconButton>
+                </HStack>
+                
             </HStack>
         </VStack>
     </div>)
 }
 
-const TaskPannel = ({mTaskTodo,doingTask})=>{
+
+
+const ListTasksItem = ({listTask,name})=>{
     return (
-        <HStack w={"full"} h={"full"} justifyContent={"start"} alignItems={"start"}>
-            <VStack  style={{maxHeight:"80%"}} w={"400px"} className="card-blur-blue transition-all" rowGap={"10px"} rounded={"8px"} px={"10px"} alignItems={"start"} bg={color_shema.card_black} h={"fit-content"}>
-                <Text color={"gray.100"} fontWeight={"400"} mt={"15px"} fontSize={"17px"}>Tasks</Text>
-                <VStack gap={"0px"} w={"full"} className="transition-all" h={"fit-content"} maxHeight={"100%"} overflowY={"scroll"}  mb={"10px"} >
-                    {mTaskTodo.map((item,index)=>{
-                        return <ItemsTask key={item.id} item={item} title={item.title} descriptions={item.descriptions} date={item.date} category={item.category} priority={item.priority} isRun={true}  />
-                    })}
-                    
-                </VStack>
+        <VStack  style={{maxHeight:"98%"}} w={"400px"} minW={"400px"} className="card-blur-blue" rounded={"8px"} px={"10px"} alignItems={"start"} bg={color_shema.card_black} h={"fit-content"}>
+            <Text color={"gray.100"} fontWeight={"400"} mt={"15px"} fontSize={"17px"}>{name}</Text>
+            <VStack gap={"0px"} flexDirection={"column"} w={"full"} h={"fit-content"} maxHeight={"100%"} overflowY={"scroll"} mb={"10px"} >
+                {listTask.map((item,index)=>{
+                    return <ItemsTask tabName={name} key={item.id} item={item} title={item.title} descriptions={item.descriptions} date={item.date} category={item.category} priority={item.priority} isRun={true}  />
+                })}
             </VStack>
-            <VStack  style={{maxHeight:"80%"}} w={"400px"} className="card-blur-blue" rounded={"8px"} px={"10px"} alignItems={"start"} bg={color_shema.card_black} h={"fit-content"}>
-                <Text color={"gray.100"} fontWeight={"400"} mt={"15px"} fontSize={"17px"}>Doing Task</Text>
-                <VStack gap={"0px"} flexDirection={"column"} w={"full"} h={"fit-content"} maxHeight={"100%"} overflowY={"scroll"} mb={"10px"} >
-                    {doingTask.map((item,index)=>{
-                        return <ItemsTask key={item.id} item={item} title={item.title} descriptions={item.descriptions} date={item.date} category={item.category} priority={item.priority} isRun={true}  />
-                    })}
-                </VStack>
-            </VStack>
+        </VStack>
+    )
+}
+
+const TaskPannel = ()=>{
+    const [tasksTodo,setTasksTodo] = useAtom(tasks_todo)
+    return (
+        <HStack w={"full"} h={"full"} overflowX={"scroll"} justifyContent={"start"} alignItems={"start"}>
+            {Object.keys(tasksTodo).map((item,index)=>{
+                return <ListTasksItem listTask={tasksTodo[item]} name={item} />
+            })}
         </HStack>
     )
 }
@@ -160,7 +181,6 @@ export default function PanelComponent(){
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [tasksTodo,setTasksTodo] = useAtom(tasks_todo)
     const [doingTask,setDoingTask] = useAtom(doing_task)
-    var mTaskTodo = [...tasksTodo]
     useEffect(()=>{
         let maxY = window.scrollMaxY;
 
@@ -203,7 +223,7 @@ export default function PanelComponent(){
                     </MenuList>
                 </Menu>
             </HStack> 
-            <TaskPannel doingTask={doingTask} mTaskTodo={mTaskTodo} />
+            <TaskPannel />
         </VStack>
     )
 }
