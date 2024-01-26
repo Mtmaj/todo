@@ -69,8 +69,6 @@ const ItemsTask = ({isRun,title,descriptions,category,priority,date,item})=>{
     const [doingTask,setDoingTask] = useAtom(doing_task)
     const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
     const rean = async ()=>{
-        set_column_ref("0fr")
-        sleep(500)
         set_column_ref("1fr")
         setIsRunned(false)
     }
@@ -94,8 +92,9 @@ const ItemsTask = ({isRun,title,descriptions,category,priority,date,item})=>{
         set_column_ref("1fr")
     }
 
-    const DeleteTask = ()=>{
+    const DeleteTask = async ()=>{
         set_column_ref("0fr")
+        await sleep(500)
         var isDoing = false
         if (tasksTodo.findIndex((i)=>i.id == item.id) == -1){
             isDoing = true
@@ -146,7 +145,7 @@ const TaskPannel = ({mTaskTodo,doingTask})=>{
             </VStack>
             <VStack  style={{maxHeight:"80%"}} w={"400px"} className="card-blur-blue" rounded={"8px"} px={"10px"} alignItems={"start"} bg={color_shema.card_black} h={"fit-content"}>
                 <Text color={"gray.100"} fontWeight={"400"} mt={"15px"} fontSize={"17px"}>Doing Task</Text>
-                <VStack gap={"0px"} flexDirection={"column"} w={"full"} h={"fit-content"} maxHeight={"100%"} overflowY={"scroll"}  rowGap={"10px"} mb={"10px"} >
+                <VStack gap={"0px"} flexDirection={"column"} w={"full"} h={"fit-content"} maxHeight={"100%"} overflowY={"scroll"} mb={"10px"} >
                     {doingTask.map((item,index)=>{
                         return <ItemsTask key={item.id} item={item} title={item.title} descriptions={item.descriptions} date={item.date} category={item.category} priority={item.priority} isRun={true}  />
                     })}
