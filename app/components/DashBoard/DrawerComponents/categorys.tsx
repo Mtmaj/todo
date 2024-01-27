@@ -16,7 +16,7 @@ import {
     AlertDialogCloseButton,
   } from '@chakra-ui/react'
 import React from "react";
-export const categorys_data = atom(["School","Home","Work"])
+export const categorys_data = atom([])
 
 export const selectDeletedCategory = atom<string[]>([])
 
