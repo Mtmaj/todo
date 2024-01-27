@@ -1,5 +1,5 @@
 "use client"
-import { HStack, Heading, VStack,Input,InputGroup,InputRightElement, Button, Box, Grid, GridItem, Card, CardHeader, CardBody,Text, CardFooter, IconButton, useDisclosure } from "@chakra-ui/react";
+import { HStack,Textarea, Heading, VStack,Input,InputGroup,InputRightElement, Button, Box, Grid, GridItem, Card, CardHeader, CardBody,Text, CardFooter, IconButton, useDisclosure } from "@chakra-ui/react";
 import {
     Menu,
     MenuButton,
@@ -8,52 +8,64 @@ import {
   } from '@chakra-ui/react'
 
 import { MdSort,MdFilterAlt } from "react-icons/md";
-import { SearchIcon,ChevronDownIcon,EditIcon,DeleteIcon,CheckIcon, AddIcon, ArrowForwardIcon, ArrowBackIcon } from "@chakra-ui/icons";
+import {CloseIcon, SearchIcon,ChevronDownIcon,EditIcon,DeleteIcon,CheckIcon, AddIcon, ArrowForwardIcon, ArrowBackIcon } from "@chakra-ui/icons";
 import { useState,useRef, useEffect, useId } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { color_shema } from "./DrawerComponents";
 import { atom, useAtom } from "jotai";
+import {categorys_data} from "./DrawerComponents/categorys"
 
-
-const tasks_todo = atom(
-    {
-        "Tasks" : [
-            {
-                id : "1",
-                title : "Write HomeWork",
-                descriptions : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga fugit pariatur beatae praesentium aut iste! Et, quaerat? Voluptatum laborum culpa autem cupiditate, animi, esse hic dignissimos sapiente nulla neque illum!",
-                category : "School",
-                priority : "High",
-                date : "1/25/2024 11:41" 
-            },
-            {
-                id : "2",
-                title : "Programming",
-                descriptions : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga fugit pariatur beatae praesentium aut iste! Et, quaerat? Voluptatum laborum culpa autem cupiditate, animi, esse hic dignissimos sapiente nulla neque illum!",
-                category : "Work",
-                priority : "Medium" ,
-                date : "1/25/2024 11:41"
-            },
-            {
-                id : "3",
-                title : "Play Game",
-                descriptions : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga fugit pariatur beatae praesentium aut iste! Et, quaerat? Voluptatum laborum culpa autem cupiditate, animi, esse hic dignissimos sapiente nulla neque illum!",
-                category : "School",
-                priority : "Low",
-                date : "1/25/2024 11:41"
-            },
-            {
-                id : "4",
-                title : "Create Web",
-                descriptions : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga fugit pariatur beatae praesentium aut iste! Et, quaerat? Voluptatum laborum culpa autem cupiditate, animi, esse hic dignissimos sapiente nulla neque illum!",
-                category : "Home",
-                priority : "High",
-                date : "1/25/2024 11:41"
-            }
-        ],
-        "Doing Tasks" : [],
-        "Finished Tasks" : [],
-    }
+export const tasks_todo = atom(
+    [
+        {
+            id : "0",
+            name : "Tasks", 
+            data : [
+                {
+                    id : "1",
+                    title : "Write HomeWork",
+                    descriptions : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga fugit pariatur beatae praesentium aut iste! Et, quaerat? Voluptatum laborum culpa autem cupiditate, animi, esse hic dignissimos sapiente nulla neque illum!",
+                    category : "School",
+                    priority : "High",
+                    date : "1/25/2024 11:41" 
+                },
+                {
+                    id : "2",
+                    title : "Programming",
+                    descriptions : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga fugit pariatur beatae praesentium aut iste! Et, quaerat? Voluptatum laborum culpa autem cupiditate, animi, esse hic dignissimos sapiente nulla neque illum!",
+                    category : "Work",
+                    priority : "Medium" ,
+                    date : "1/25/2024 11:41"
+                },
+                {
+                    id : "3",
+                    title : "Play Game",
+                    descriptions : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga fugit pariatur beatae praesentium aut iste! Et, quaerat? Voluptatum laborum culpa autem cupiditate, animi, esse hic dignissimos sapiente nulla neque illum!",
+                    category : "School",
+                    priority : "Low",
+                    date : "1/25/2024 11:41"
+                },
+                {
+                    id : "4",
+                    title : "Create Web",
+                    descriptions : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga fugit pariatur beatae praesentium aut iste! Et, quaerat? Voluptatum laborum culpa autem cupiditate, animi, esse hic dignissimos sapiente nulla neque illum!",
+                    category : "Home",
+                    priority : "High",
+                    date : "1/25/2024 11:41"
+                }
+            ],
+        },
+        {
+            id : "1",
+            name : "Doing Tasks", 
+            data : [],
+        },
+        {
+            id : "2",
+            name : "Finished", 
+            data : [],
+        }
+    ]
 );
 
 const doing_task = atom([]);
@@ -61,7 +73,7 @@ const doing_task = atom([]);
 
 
 
-const ItemsTask = ({isRun,title,descriptions,category,priority,date,item,tabName})=>{
+const ItemsTask = ({isRun,title,descriptions,category,priority,date,item,tabID})=>{
     const priority_color = {
         "High" : "red",
         "Medium" : "gray",
@@ -71,6 +83,14 @@ const ItemsTask = ({isRun,title,descriptions,category,priority,date,item,tabName
     const [isRunned,setIsRunned] = useState(isRun)
     const [tasksTodo,setTasksTodo] = useAtom(tasks_todo)
     const [doingTask,setDoingTask] = useAtom(doing_task)
+    const [categorys,SetCategorys] = useAtom(categorys_data)
+    const [titleVal,setTitleVal] = useState(title)
+    const [desVal,setDesVal] = useState(descriptions)
+    const [isEdit,setIsEdit] = useState(false)
+    const [categoryVal,setCategoryVal] = useState(category)
+    const [priorityVal,setPriorityVal] = useState(category)
+
+    const index_tab = tasksTodo.findIndex((item)=>item.id == tabID)
     const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
     const rean = async ()=>{
         await sleep(100)
@@ -86,66 +106,111 @@ const ItemsTask = ({isRun,title,descriptions,category,priority,date,item,tabName
     })
     const ToNext = async ()=>{
         set_column_ref("0fr")
-        var task_list = {...tasksTodo}
-        var next_list = task_list[Object.keys(task_list)[Object.keys(task_list).indexOf(tabName) + 1]]
+        var task_list = [...tasksTodo]
+        var index_next = index_tab + 1
+        var next_list = task_list[index_next].data
         var dt = [item,...next_list]
-        task_list[Object.keys(task_list)[Object.keys(task_list).indexOf(tabName) + 1]] = [...dt]
-        setTasksTodo({...task_list})
+        task_list[index_next].data = [...dt]
+        setTasksTodo([...task_list])
         await sleep(500)
-        var tt = [...task_list[tabName]]
+        var tt = [...task_list[index_tab].data]
         var index_remove =  tt.findIndex((i)=>i.id == item.id)
         tt.splice(index_remove,1)
-        task_list[tabName] = [...tt]
-        setTasksTodo({...task_list})
+        task_list[index_tab].data = [...tt]
+        setTasksTodo([...task_list])
     }
     
     const ToPrev = async ()=>{
         set_column_ref("0fr")
-        var task_list = {...tasksTodo}
-        var last_list = task_list[Object.keys(task_list)[Object.keys(task_list).indexOf(tabName) - 1]]
+        var task_list = [...tasksTodo]
+        var last_list = task_list[index_tab - 1].data
         var dt = [item,...last_list]
-        task_list[Object.keys(task_list)[Object.keys(task_list).indexOf(tabName) - 1]] = [...dt]
-        setTasksTodo({...task_list})
+        task_list[index_tab - 1].data = [...dt]
+        setTasksTodo([...task_list])
         await sleep(500)
-        var tt = [...task_list[tabName]]
+        var tt = [...task_list[index_tab].data]
         var index_remove =  tt.findIndex((i)=>i.id == item.id)
         tt.splice(index_remove,1)
-        task_list[tabName] = [...tt]
-        setTasksTodo({...task_list})
+        task_list[index_tab].data = [...tt]
+        setTasksTodo([...task_list])
     }
 
     const DeleteTask = async ()=>{
         set_column_ref("0fr")
         await sleep(500)
-        var task_list = {...tasksTodo}
-        var tt = [...task_list[tabName]]
+        var task_list = [...tasksTodo]
+        var tt = [...task_list[index_tab].data]
         var index_remove =  tt.findIndex((i)=>i.id == item.id)
         tt.splice(index_remove,1)
-        task_list[tabName] = [...tt]
-        setTasksTodo({...task_list})
+        task_list[index_tab].data = [...tt]
+        setTasksTodo([...task_list])
     }
+
+    const SubmitEdit = ()=>{
+        var task_list = [...tasksTodo]
+        var index_item = task_list[index_tab].data.findIndex((item)=>item.id == item.id)
+        task_list[index_tab].data[index_item].title = titleVal
+        task_list[index_tab].data[index_item].descriptions = desVal
+        task_list[index_tab].data[index_item].category = categoryVal
+        task_list[index_tab].data[index_item].priority = priorityVal
+        setTasksTodo(task_list)
+        setIsEdit(false)
+    }
+
     return (
     <div className="w-full" className={" " + ("duration-[500ms] transition-al")} style={{"display":"grid","gridTemplateRows":column_ref}} >
-        <VStack mb={column_ref == "1fr"?"5px":"0px"} borderLeft={"2px "+priority_color[priority]+" solid"} border={column_ref == "0fr"? "!border-transparent" : ""} overflow={"hidden"}  className="transition-all task-blur duration-[500ms]" w={"full"} bg={color_shema.black}  justify={"start"} px={"15px"} py={column_ref == "1fr"?"15px":"0px"} alignItems={"start"} rounded={"8px"} >
+        <VStack mb={column_ref == "1fr"?"5px":"0px"} borderLeft={"3px "+priority_color[isEdit?priorityVal: priority]+" solid"} border={column_ref == "0fr"? "!border-[2px_transparent_solid]" : ""} overflow={"hidden"}  className="transition-all group task-blur duration-[500ms]" w={"full"} bg={color_shema.black}  justify={"start"} px={"15px"} py={column_ref == "1fr"?"15px":"0px"} alignItems={"start"} rounded={"8px"} >
             <HStack justifyContent={"space-between"} alignItems={"center"} w={"100%"} >
-                <Text color={"gray.200"} fontSize={"15px"} fontWeight={"500"}>{title}</Text>
-                <HStack>
-                    <IconButton aria-label="Setting" rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={color_shema.blue} borderRadius={"full"} icon={<EditIcon/>} ></IconButton>
-                    <IconButton aria-label="Setting" rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={color_shema.blue} borderRadius={"full"} onClick={DeleteTask} icon={<DeleteIcon/>}></IconButton>
+                <Text hidden={isEdit} color={"gray.200"} fontSize={"15px"} fontWeight={"500"}>{title}</Text>
+                <Input hidden={!isEdit} w={"full"} variant={"outline"} borderColor={color_shema.blue} color={"gray.200"} value={titleVal} onChange={(e)=>{
+                    setTitleVal(e.currentTarget.value)
+                }} ></Input>
+                <HStack className="group-hover:opacity-[1] transition-all opacity-0" hidden={isEdit}>
+                    <IconButton aria-label="Edit" rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={color_shema.blue} borderRadius={"full"} onClick={()=>{setTitleVal(title);setDesVal(descriptions);setCategoryVal(category);setPriorityVal(priority);setIsEdit(true)}} icon={<EditIcon/>} ></IconButton>
+                    <IconButton aria-label="Delete" rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={color_shema.blue} borderRadius={"full"} onClick={DeleteTask} icon={<DeleteIcon/>}></IconButton>
+                </HStack>
+                <HStack hidden={!isEdit}>
+                    <IconButton aria-label="Submit" rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={color_shema.blue} borderRadius={"full"} onClick={SubmitEdit} icon={<CheckIcon/>} ></IconButton>
+                    <IconButton aria-label="Discard" rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={color_shema.blue} borderRadius={"full"} onClick={()=>{setIsEdit(false)}} icon={<CloseIcon/>}></IconButton>
                 </HStack>
             </HStack>
-            <Text mt={"-2px"} ml={"5px"} color={"gray.300"} fontSize={"14px"} textOverflow={"clip"}>{descriptions}</Text>
-            <HStack alignItems={"center"} mt={"5px"} mb={"-5px"} fontSize={"14px"} justifyContent={"space-between"} w={"full"}>
+            <Text hidden={isEdit} mt={"-2px"} ml={"5px"} color={"gray.300"} fontSize={"14px"} textOverflow={"clip"}>{descriptions}</Text>
+            <Textarea borderColor={color_shema.blue} w={"full"} h={"200px"} resize={"none"} variant={"outline"} color={"white"} hidden={!isEdit} overflow={"hidden"} value={desVal} onChange={(e)=>{
+                setDesVal(e.currentTarget.value)
+            }} ></Textarea>
+            <HStack hidden={isEdit} alignItems={"center"} mt={"5px"} mb={"-5px"} fontSize={"14px"} justifyContent={"space-between"} w={"full"}>
                 <HStack>
                     <Text color={"gray.300"} borderColor={color_shema.blue}  _hover={{bg:color_shema.blue}} cursor={"pointer"} className="transition-all" borderWidth={"1px"} px={"10px"} py={"3px"} rounded={"full"}># {category}</Text>
                     <Text color={"gray.500"}>{date}</Text>
                 </HStack>
 
-                <HStack>
-                <IconButton hidden={Object.keys(tasksTodo).indexOf(tabName) > 0?false:true} onClick={ToPrev} icon={<ArrowBackIcon />} color={"gray.300"} borderColor={color_shema.blue} size={"sm"}  borderWidth={"1px"} _hover={{bg:color_shema.blue}} className="transition-all" bg={"transparent"} rounded={"full"} ></IconButton>
-                    <IconButton hidden={Object.keys(tasksTodo).indexOf(tabName) < Object.keys(tasksTodo).length - 1?false:true} onClick={ToNext} icon={<ArrowForwardIcon />} color={"gray.300"} borderColor={color_shema.blue} size={"sm"}  borderWidth={"1px"} _hover={{bg:color_shema.blue}} className="transition-all" bg={"transparent"} rounded={"full"} ></IconButton>
+                <HStack hidden={isEdit} className="group-hover:opacity-[1] transition-all opacity-0">
+                    <IconButton hidden={index_tab > 0?false:true} onClick={ToPrev} icon={<ArrowBackIcon    />} color={"gray.300"} borderColor={color_shema.blue} size={"sm"}  borderWidth={"1px"} _hover={{bg:color_shema.blue}} className="transition-all" bg={"transparent"} rounded={"full"} ></IconButton>
+                    <IconButton hidden={index_tab < tasksTodo.length-1?false:true} onClick={ToNext} icon={<ArrowForwardIcon />} color={"gray.300"} borderColor={color_shema.blue} size={"sm"}  borderWidth={"1px"} _hover={{bg:color_shema.blue}} className="transition-all" bg={"transparent"} rounded={"full"} ></IconButton>
                 </HStack>
                 
+            </HStack>
+            <HStack hidden={!isEdit}>
+                <Menu>
+                    <MenuButton rounded={"full"} _active={{bg:color_shema.card_black}} borderColor={color_shema.blue} borderWidth={"1px"} variant={"outline"} bg={color_shema.card_black} color={"gray.50"} fontWeight={"300"} _hover={{opacity:"1",bg:color_shema.card_black}} opacity={"0.6"} as={Button} minW={"fit-content"} rightIcon={<ChevronDownIcon />}>
+                        {categoryVal}
+                    </MenuButton>
+                    <MenuList bg={color_shema.card_black} border={"0px"}>
+                        {categorys.map((item,index)=>{
+                            return <MenuItem bg={color_shema.card_black} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}} onClick={()=>{setCategoryVal(item)}} >{item}</MenuItem>
+                        })}
+                    </MenuList>
+                </Menu>
+                <Menu>
+                    <MenuButton rounded={"full"} _active={{bg:color_shema.card_black}} borderColor={color_shema.blue} borderWidth={"1px"} variant={"outline"} bg={color_shema.card_black} color={"gray.50"} fontWeight={"300"} _hover={{opacity:"1",bg:color_shema.card_black}} opacity={"0.6"} as={Button} minW={"fit-content"} rightIcon={<ChevronDownIcon />}>
+                        {priorityVal}
+                    </MenuButton>
+                    <MenuList bg={color_shema.card_black} border={"0px"}>
+                        <MenuItem bg={color_shema.card_black} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}} onClick={()=>{setPriorityVal("High")}} >High</MenuItem>
+                        <MenuItem bg={color_shema.card_black} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}} onClick={()=>{setPriorityVal("Medium")}} >Medium</MenuItem>
+                        <MenuItem bg={color_shema.card_black} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}} onClick={()=>{setPriorityVal("Low")}} >Low</MenuItem>
+                    </MenuList>
+                </Menu>
             </HStack>
         </VStack>
     </div>)
@@ -153,13 +218,47 @@ const ItemsTask = ({isRun,title,descriptions,category,priority,date,item,tabName
 
 
 
-const ListTasksItem = ({listTask,name})=>{
+const ListTasksItem = ({listTask,name,id})=>{
+
+    const [isEdit,setIsEdit] = useState(false)
+    const [taskTodo,setTaskTodo] = useAtom(tasks_todo)
+    const [inputVal,setInputVal] = useState(name)
+    function Deleted_Tab(){
+        var tasks_list = [...taskTodo]
+        tasks_list.splice(tasks_list.findIndex((item)=>item.id == id),1)
+        setTaskTodo([...tasks_list])
+    }
+
+    function SubmitEdit(){
+        var tasks_list = [...taskTodo]
+        if(name != inputVal){
+            tasks_list[tasks_list.findIndex((item)=>item.id == id)].name = inputVal
+        }
+        console.log(tasks_list)
+        setIsEdit(false)
+        setTaskTodo([...tasks_list])
+    }
+
     return (
         <VStack  style={{maxHeight:"98%"}} w={"400px"} minW={"400px"} className="card-blur-blue" rounded={"8px"} px={"10px"} alignItems={"start"} bg={color_shema.card_black} h={"fit-content"}>
-            <Text color={"gray.100"} fontWeight={"400"} mt={"15px"} fontSize={"17px"}>{name}</Text>
+            <HStack mt={"15px"} alignItems={"center"} w={"full"} justifyContent={"space-between"}>
+                <Text hidden={isEdit} color={"gray.100"} fontWeight={"400"} fontSize={"17px"}>{name}</Text>
+                <Input hidden={!isEdit} w={"full"} variant={"outline"} borderColor={color_shema.blue} color={"gray.200"} value={inputVal} onChange={(e)=>{
+                    setInputVal(e.currentTarget.value)
+                }} ></Input>
+                <HStack hidden={isEdit}>
+                    <IconButton aria-label="Add" rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={color_shema.blue} borderRadius={"full"} icon={<AddIcon/>} ></IconButton>
+                    <IconButton aria-label="Edit" rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={color_shema.blue} borderRadius={"full"} onClick={()=>{setInputVal(name);setIsEdit(true)}} icon={<EditIcon/>} ></IconButton>
+                    <IconButton aria-label="Delete" onClick={Deleted_Tab} rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={color_shema.blue} borderRadius={"full"} icon={<DeleteIcon />} ></IconButton>
+                </HStack> 
+                <HStack hidden={!isEdit}>
+                    <IconButton aria-label="Setting" rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={color_shema.blue} borderRadius={"full"} onClick={SubmitEdit} icon={<CheckIcon/>}></IconButton>
+                    <IconButton aria-label="Setting" rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={color_shema.blue} borderRadius={"full"} onClick={()=>{setIsEdit(false)}} icon={<CloseIcon/>}></IconButton>
+                </HStack>
+            </HStack>
             <VStack gap={"0px"} flexDirection={"column"} w={"full"} h={"fit-content"} maxHeight={"100%"} overflowY={"scroll"} mb={"10px"} >
                 {listTask.map((item,index)=>{
-                    return <ItemsTask tabName={name} key={item.id} item={item} title={item.title} descriptions={item.descriptions} date={item.date} category={item.category} priority={item.priority} isRun={true}  />
+                    return <ItemsTask tabID={id} key={item.id} item={item} title={item.title} descriptions={item.descriptions} date={item.date} category={item.category} priority={item.priority} isRun={true}  />
                 })}
             </VStack>
         </VStack>
@@ -170,8 +269,8 @@ const TaskPannel = ()=>{
     const [tasksTodo,setTasksTodo] = useAtom(tasks_todo)
     return (
         <HStack w={"full"} h={"full"} overflowX={"scroll"} justifyContent={"start"} alignItems={"start"}>
-            {Object.keys(tasksTodo).map((item,index)=>{
-                return <ListTasksItem listTask={tasksTodo[item]} name={item} />
+            {tasksTodo.map((item,index)=>{
+                return <ListTasksItem id={item.id} key={item.id} listTask={item.data} name={item.name} />
             })}
         </HStack>
     )

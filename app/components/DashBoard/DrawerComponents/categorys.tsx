@@ -5,7 +5,7 @@ import { atom, useAtom } from "jotai";
 import Image from "next/image";
 import { useState } from "react"
 import { color_shema } from ".";
-
+import {tasks_todo} from "../pannel"
 import {
     AlertDialog,
     AlertDialogBody,
@@ -16,9 +16,9 @@ import {
     AlertDialogCloseButton,
   } from '@chakra-ui/react'
 import React from "react";
-const categorys_data = atom([])
+export const categorys_data = atom(["School","Home","Work"])
 
-const selectDeletedCategory = atom<string[]>([])
+export const selectDeletedCategory = atom<string[]>([])
 
 var updateCategorys = []
 
@@ -118,12 +118,22 @@ export const Categorys = ()=>{
       const [categoryDeleted,setCategoryDeleted] = useAtom(selectDeletedCategory)
       const [isEdit,setIsEdit] = useState(false)
       const [listAdd,setListAdd] = useAtom(newCategory)
+      const [todoTask,setTodoTask] = useAtom(tasks_todo)
       const { isOpen, onOpen, onClose } = useDisclosure()
       const cancelRef = React.useRef()
       updateCategorys = []
       const SubmitAction = ()=>{
         var list_category = [...categoryData]
         var categorys_select_list = [...categorysSelect]
+        var tasks_list = [...todoTask]
+        categoryDeleted.map((item,index)=>{
+          tasks_list.map((tabs,index)=>{
+            while(tabs.data.findIndex((i)=>i.category == item) > -1){
+              tabs.data.splice(tabs.data.findIndex((i)=>i.category == item),1)
+            }
+          })
+        })
+        setTodoTask([...tasks_list])
         categoryDeleted.map((item,index)=>{
             list_category[list_category.indexOf(item)] = ""
             var indexS = categorys_select_list.indexOf(item)
@@ -191,7 +201,7 @@ export const Categorys = ()=>{
                   
                   {!isEdit && categoryData.length == 0? <Text color={"gray.400"} marginBottom={"20px"} >You don't have category ,Please Add Your Category</Text> : categoryData.map((item:string,index:number)=>{
                       updateCategorys.push(item)
-                      return (<CtaegorysItem text={item} index={index} isEdit={isEdit} categorysSelect={categorysSelect} setCategorysSelect={setCategorysSelect} is_select={categorysSelect.indexOf(item) != -1}/>)
+                      return (<CtaegorysItem key={item} text={item} index={index} isEdit={isEdit} categorysSelect={categorysSelect} setCategorysSelect={setCategorysSelect} is_select={categorysSelect.indexOf(item) != -1}/>)
                   })}
                   {isEdit?
                    listAdd.map((item,index)=>{
