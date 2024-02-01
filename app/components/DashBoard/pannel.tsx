@@ -400,7 +400,7 @@ export default function PanelComponent(){
     }
 
     return (
-        <VStack h={"full"} w={"full"} justifyContent={"start"} alignItems={"start"} px={{md:"20px",base:"15px"}} pt={{md:"20px",base:"15px"}} overflow={"hidden"} pb={"0px"} position={"relative"} rowGap={"20px"} >
+        <VStack className="z-30" h={"full"} w={"full"} justifyContent={"start"} alignItems={"start"} px={{md:"20px",base:"15px"}} pt={{md:"20px",base:"15px"}} overflow={"hidden"} pb={"0px"} position={"relative"} rowGap={"20px"} >
             <Box position={"absolute"} display={"flex"} className="pointer-events-none" justifyContent={"end"} alignItems={"end"} zIndex={"10"} w={"full"} h="full" p={"40px"}>
                 <IconButton aria-label="Add Task" display={{md:"hidden",base:"flex"}} onClick={addTab} variant={"solid"} className="pointer-events-auto drop-shadow-xl shadow-xl" size={"lg"} bgColor={color_shema.blue} color={"white"} _hover={{color:"black",backgroundColor:"gray.100"}} isRound={true} icon={<AddIcon />} ></IconButton>
             </Box>

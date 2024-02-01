@@ -44,7 +44,7 @@ export default class Clock extends Component {
 
   render() {
     return (
-      <div className="clock md:absolute hidden">
+      <div className="clock">
         <div
           className="hour_hand"
           style={{
@@ -91,7 +91,7 @@ export const TimeAndDateAndDailyText = ()=>{
     return (
         <HStack w={"95%"} rounded={"7px"} p={"5px"}  background={color_shema.card_black}>
             <VStack minW={"80px"} w={"80px"} h={"80px"} justifyContent={"space-around"} className="timegradient" rounded={"5px"} alignItems={"center"}>
-                <Clock />
+                
                 <img className="w-full h-full object-cover rounded" src={"https://marvel-b1-cdn.bc0a.com/f00000000293000/www.rockhall.com/sites/default/files/styles/c33_quote_desktop_1920_1080/public/2019-11/Quote_JohnLennon.jpg?h=4362216e&itok=MhUwmlaf"}></img>
             </VStack>
             <VStack alignItems={"start"}>
