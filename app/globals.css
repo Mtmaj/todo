@@ -107,6 +107,7 @@ div::-webkit-scrollbar-track {
 
 .sec_hand {
   position: absolute;
+  z-index: 0;
   width: 2px;
   height: 118px;
   background: red;
@@ -115,10 +116,15 @@ div::-webkit-scrollbar-track {
   transform-origin: bottom;
 }
 
+.clock{
+  z-index: 0;
+}
+
 .clock span {
   position: absolute;
   font-family: "Source Sans Pro", sans-serif;
   font-weight: 700;
+  z-index: 0;
 }
 
 .twelve {

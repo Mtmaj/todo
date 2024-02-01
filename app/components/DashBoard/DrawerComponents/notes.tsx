@@ -83,14 +83,14 @@ export const Notes = ({title,text,index}:{title:string,text:string,index:number}
                     setTitleVal(e.currentTarget.value)
                 }} ></Input>
                 <HStack>
-                <IconButton aria-label="Setting" rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={color_shema.blue} borderRadius={"full"} onClick={()=>{setTextVal(text),setTitleVal(title);setIsEdit(!isEdit)}} hidden={isEdit} icon={<EditIcon/>}></IconButton>
-                <IconButton aria-label="Setting" rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={color_shema.blue} borderRadius={"full"} onClick={onSubmit} hidden={!isEdit} icon={<CheckIcon/>}></IconButton>
-                <IconButton aria-label="Setting" hidden={isEdit} onClick={()=>{
-                    var list_change = [...listNotes]
-                    list_change.splice(index,1)
-                    setListNote([...list_change])
-                }} rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={color_shema.blue} borderRadius={"full"} icon={<DeleteIcon/>}></IconButton>
-                <IconButton aria-label="Setting" rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={color_shema.blue} borderRadius={"full"} onClick={()=>{setIsEdit(!isEdit)}} hidden={!isEdit} icon={<CloseIcon/>}></IconButton>
+                    <IconButton aria-label="Setting" rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={color_shema.blue} borderRadius={"full"} onClick={()=>{setTextVal(text),setTitleVal(title);setIsEdit(!isEdit)}} hidden={isEdit} icon={<EditIcon/>}></IconButton>
+                    <IconButton aria-label="Setting" rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={color_shema.blue} borderRadius={"full"} onClick={onSubmit} hidden={!isEdit} icon={<CheckIcon/>}></IconButton>
+                    <IconButton aria-label="Setting" hidden={isEdit} onClick={()=>{
+                        var list_change = [...listNotes]
+                        list_change.splice(index,1)
+                        setListNote([...list_change])
+                    }} rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={color_shema.blue} borderRadius={"full"} icon={<DeleteIcon/>}></IconButton>
+                    <IconButton aria-label="Setting" rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={color_shema.blue} borderRadius={"full"} onClick={()=>{setIsEdit(!isEdit)}} hidden={!isEdit} icon={<CloseIcon/>}></IconButton>
                 </HStack>
             </HStack>
             

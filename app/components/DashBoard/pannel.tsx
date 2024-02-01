@@ -1,5 +1,5 @@
 "use client"
-import { HStack,Textarea, Heading, VStack,Input,InputGroup,InputRightElement, Button, Box, Grid, GridItem, Card, CardHeader, CardBody,Text, CardFooter, IconButton, useDisclosure } from "@chakra-ui/react";
+import { HStack,Textarea, Heading, VStack,Input,InputGroup,InputRightElement, Button, Box, Grid, GridItem, Card, CardHeader, CardBody,Text, CardFooter, IconButton, useDisclosure, MenuIcon } from "@chakra-ui/react";
 import {
     Menu,
     MenuButton,
@@ -16,6 +16,8 @@ import { atom, useAtom } from "jotai";
 import {categorys_data} from "./DrawerComponents/categorys"
 import dateFormat, { masks } from "dateformat";
 import { v4 as uuidv4 } from 'uuid';
+import { IoMenu } from "react-icons/io5";
+import { drawerIsOpen } from "./DrawerComponent";
 
 export const tasks_todo = atom(
     []
@@ -162,6 +164,7 @@ const ItemsTask = ({isRun,title,descriptions,category,priority,date,item,tabID})
     }
     var category_len = categorys.length
     console.log("___________________________________",category_len)
+    const newLocal = "100px";
     return (
     <div className="w-full"  className={" " + ("duration-[500ms] transition-al")} style={{"display":"grid","gridTemplateRows":column_ref,"width":"100%"}} >
         <VStack width={"full"} mb={column_ref == "1fr"?"5px":"0px"} borderLeft={"3px "+priority_color[isEdit?priorityVal: priority]+" solid"} border={column_ref == "0fr"? "!border-[2px_transparent_solid]" : ""} overflow={"hidden"}  className="transition-all group task-blur duration-[500ms]" w={"full"} bg={color_shema.black}  justify={"start"} px={"15px"} py={column_ref == "1fr"?"15px":"0px"} alignItems={"start"} rounded={"8px"} >
@@ -184,8 +187,8 @@ const ItemsTask = ({isRun,title,descriptions,category,priority,date,item,tabID})
                 setDesVal(e.currentTarget.value)
             }} ></Textarea>
             <HStack hidden={isEdit} alignItems={"center"} mt={"5px"} mb={"-5px"} fontSize={"14px"} justifyContent={"space-between"} w={"full"}>
-                <HStack>
-                    <Text color={"gray.300"} borderColor={color_shema.blue}  _hover={{bg:color_shema.blue}} cursor={"pointer"} className="transition-all" borderWidth={"1px"} px={"10px"} py={"3px"} rounded={"full"}># {category}</Text>
+                <HStack w={"full"}>
+                    <Text color={"gray.300"} borderColor={color_shema.blue}  _hover={{bg:color_shema.blue}} cursor={"pointer"} whiteSpace={"nowrap"} className="transition-all text-ellipsis overflow-hidden max-w-[120px]" borderWidth={"1px"} px={"10px"} py={"3px"} rounded={"full"}>#{category}</Text>
                     <Text color={"gray.500"}>{date}</Text>
                 </HStack>
 
@@ -197,8 +200,8 @@ const ItemsTask = ({isRun,title,descriptions,category,priority,date,item,tabID})
             </HStack>
             <HStack hidden={!isEdit}>
                 <Menu>
-                    <MenuButton rounded={"full"} _active={{bg:color_shema.card_black}} borderColor={color_shema.blue} borderWidth={"1px"} variant={"outline"} bg={color_shema.card_black} color={"gray.50"} fontWeight={"300"} _hover={{opacity:"1",bg:color_shema.card_black}} opacity={"0.6"} as={Button} minW={"fit-content"} rightIcon={<ChevronDownIcon />}>
-                        {categoryVal}
+                    <MenuButton className="max-w-[100px] overflow-hidden text-ellipsis" maxW={newLocal} overflow={"hidden"}  className="max-w-[120px]" rounded={"full"} _active={{bg:color_shema.card_black}} borderColor={color_shema.blue} borderWidth={"1px"} variant={"outline"} bg={color_shema.card_black} color={"gray.50"} fontWeight={"300"} _hover={{opacity:"1",bg:color_shema.card_black}} opacity={"0.6"} as={Button} minW={"fit-content"} rightIcon={<ChevronDownIcon />}>
+                        <span className="max-w-[100px] overflow-hidden text-ellipsis"> {categoryVal} </span>
                     </MenuButton>
                     <MenuList bg={color_shema.card_black} border={"0px"}>
                         {categorys.length == 0?console.log("hello")
@@ -255,7 +258,7 @@ const AddTaskComponent = ({column_ref,set_column_ref,index_tab})=>{
                 descriptions : desVal,
                 category : categoryVal,
                 priority : priorityVal,
-                date : dateFormat(now,"m/dd/yyyy h:MM TT")
+                date : dateFormat(now,"m/dd/yyyy")
             }
         ,...list_task[index_tab].data]
         setTasksTodo([...list_task])
@@ -282,13 +285,14 @@ const AddTaskComponent = ({column_ref,set_column_ref,index_tab})=>{
                     setDesVal(e.currentTarget.value)
                 }} ></Textarea>
                 <HStack>
-                    <Menu>
+                    <Menu boundary={"scrollParent"} flip placement="top-end">
                         <MenuButton rounded={"full"} _active={{bg:color_shema.card_black}} borderColor={color_shema.blue} borderWidth={"1px"} variant={"outline"} bg={color_shema.card_black} color={"gray.50"} fontWeight={"300"} _hover={{opacity:"1",bg:color_shema.card_black}} opacity={"0.6"} as={Button} minW={"fit-content"} rightIcon={<ChevronDownIcon />}>
                             {categoryVal}
                         </MenuButton>
                         <MenuList bg={color_shema.card_black} border={"0px"}>
                         {categorys.length == 0?
-                            (<MenuItem bg={color_shema.card_black} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}}>Please Add Category From Dashbord</MenuItem>)
+                            (<MenuItem w={"200px"} bg={color_shema.card_black} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}}>Please Add Category
+                             From Dashbord</MenuItem>)
                         : (categorys.map((item,index)=>{
                             return <MenuItem bg={color_shema.card_black} key={uuidv4()} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}} onClick={()=>{setCategoryVal(item)}} >{item}</MenuItem>
                         }))}
@@ -334,7 +338,7 @@ const ListTasksItem = ({listTask,name,id,index})=>{
     }
 
     return (
-        <VStack  style={{maxHeight:"98%"}} w={"400px"} minW={"400px"} className="card-blur-blue" rounded={"8px"} px={"10px"} alignItems={"start"} bg={color_shema.card_black} h={"fit-content"}>
+        <VStack  style={{maxHeight:"98%"}} w={{md: "400px",base:"335px"}} minW={{md: "400px",base:"335px"}} className="card-blur-blue" rounded={"8px"} px={"10px"} alignItems={"start"} bg={color_shema.card_black} h={"fit-content"}>
             <HStack mt={"15px"} alignItems={"center"} w={"full"} justifyContent={"space-between"}>
                 <Text hidden={isEdit} color={"gray.100"} fontWeight={"400"} fontSize={"17px"}>{name}</Text>
                 <Input placeholder="Please Enter Tabs Name ..." hidden={!isEdit} w={"full"} variant={"outline"} borderColor={color_shema.blue} color={"gray.200"} value={inputVal} onChange={(e)=>{
@@ -363,10 +367,13 @@ const ListTasksItem = ({listTask,name,id,index})=>{
 const TaskPannel = ()=>{
     const [tasksTodo,setTasksTodo] = useAtom(tasks_todo)
     return (
-        <HStack w={"full"} h={"full"} overflowX={"scroll"} justifyContent={"start"} alignItems={"start"}>
+        <HStack w={"calc(100% + 40px)"} h={"full"} mx={"-20px"} overflowX={"scroll"} justifyContent={"start"} alignItems={"start"}>
+            <Box minW={"11px"} w={"11px"}></Box>
             {tasksTodo.map((item,index)=>{
+
                 return <ListTasksItem index={index} id={item.id} key={item.id} listTask={item.data} name={item.name} />
             })}
+            <Box minW={"11px"} w={"11px"}></Box>
         </HStack>
     )
 }
@@ -374,6 +381,7 @@ const TaskPannel = ()=>{
 export default function PanelComponent(){
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [tasksTodo,setTasksTodo] = useAtom(tasks_todo)
+    const [isOpenDrawe,setIsOpenDrawe] = useAtom(drawerIsOpen)
     useEffect(()=>{
         let maxY = window.scrollMaxY;
 
@@ -392,40 +400,46 @@ export default function PanelComponent(){
     }
 
     return (
-        <VStack h={"full"} w={"full"} justifyContent={"start"} alignItems={"start"} p={"20px"} overflow={"hidden"} pb={"0px"} position={"relative"} rowGap={"20px"} >
+        <VStack h={"full"} w={"full"} justifyContent={"start"} alignItems={"start"} px={{md:"20px",base:"15px"}} pt={{md:"20px",base:"15px"}} overflow={"hidden"} pb={"0px"} position={"relative"} rowGap={"20px"} >
             <Box position={"absolute"} display={"flex"} className="pointer-events-none" justifyContent={"end"} alignItems={"end"} zIndex={"10"} w={"full"} h="full" p={"40px"}>
-                <IconButton aria-label="Add Task" onClick={addTab} variant={"solid"} className="pointer-events-auto drop-shadow-xl shadow-xl" size={"lg"} bgColor={"blue.400"} color={"white"} _hover={{color:"black",backgroundColor:"gray.100"}} isRound={true} icon={<AddIcon />} ></IconButton>
+                <IconButton aria-label="Add Task" display={{md:"hidden",base:"flex"}} onClick={addTab} variant={"solid"} className="pointer-events-auto drop-shadow-xl shadow-xl" size={"lg"} bgColor={color_shema.blue} color={"white"} _hover={{color:"black",backgroundColor:"gray.100"}} isRound={true} icon={<AddIcon />} ></IconButton>
             </Box>
-            <Heading size={"lg"} color={"gray.50"} fontWeight={"400"}>My Tasks</Heading>
-            <HStack w={"full"} columnGap={"10px"}>
+            <HStack>
+                <IconButton display={{base:"flex",md:"none"}} onClick={()=>{setIsOpenDrawe(true)}} aria-label="Open Menu" rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={color_shema.blue} borderRadius={"full"} icon={<IoMenu size={28}/>}></IconButton>
+                <Heading size={"lg"} color={"gray.50"} fontWeight={"400"}>My Tasks</Heading>
+            </HStack>
+            <HStack w={"full"} flexDirection={{md:"row",base:"column"}} columnGap={"10px"}>
                 <InputGroup variant={"filled"} bg={color_shema.card_black} rounded={"10px"} color={"gray.300"} _hover={{bg:color_shema.card_black}} border={color_shema.blue + " !important"}>
                     <Input placeholder="Search In Your Tasks" backgroundColor={color_shema.card_black} _hover={{bg:color_shema.card_black}}  _focus={{border:"1px",borderColor:color_shema.blue}}></Input>
                     <InputRightElement>
                         <SearchIcon color={color_shema.blue} />
                     </InputRightElement>
                 </InputGroup>
-                <Menu>
-                    <MenuButton variant={"filled"} bg={color_shema.card_black} color={"gray.50"} fontWeight={"300"} _hover={{opacity:"1"}} opacity={"0.6"} as={Button} leftIcon={<MdFilterAlt />} minW={"fit-content"} rightIcon={<ChevronDownIcon />}>
-                        Filter
-                    </MenuButton>
-                    <MenuList bg={color_shema.card_black} color={"gray.50"} border={"0px"}>
-                        <MenuItem bg={color_shema.card_black} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}}>High</MenuItem>
-                        <MenuItem bg={color_shema.card_black} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}} >Medium</MenuItem>
-                        <MenuItem bg={color_shema.card_black} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}} >Low</MenuItem>
-                        <MenuItem bg={color_shema.card_black} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}} >No Filter</MenuItem>
-                    </MenuList>
-                </Menu>
-                <Menu>
-                    <MenuButton variant={"filled"} bg={color_shema.card_black} color={"gray.50"} fontWeight={"300"} _hover={{opacity:"1"}} opacity={"0.6"} as={Button} minW={"fit-content"} leftIcon={<MdSort />} rightIcon={<ChevronDownIcon />}>
-                        Sort
-                    </MenuButton>
-                    <MenuList bg={color_shema.card_black} border={"0px"}>
-                        <MenuItem bg={color_shema.card_black} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}} >Name</MenuItem>
-                        <MenuItem bg={color_shema.card_black} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}} >Date</MenuItem>
-                        <MenuItem bg={color_shema.card_black} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}} >Prority</MenuItem>
-                        <MenuItem bg={color_shema.card_black} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}} >Added Time</MenuItem>
-                    </MenuList>
-                </Menu>
+                <HStack columnGap={"10px"} w={{base:"full",md:"fit-content"}}>
+                    <Menu >
+                        <MenuButton variant={"filled"} bg={color_shema.card_black} color={"gray.50"} fontWeight={"300"} _hover={{opacity:"1"}} opacity={"0.6"} as={Button} leftIcon={<MdFilterAlt />} w={{base:"full",md:"fit-content"}} minW={{md: "fit-content",base:"0px"}} rightIcon={<ChevronDownIcon />}>
+                            Filter
+                        </MenuButton>
+                        <MenuList bg={color_shema.card_black} color={"gray.50"} border={"0px"}>
+                            <MenuItem bg={color_shema.card_black} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}}>High</MenuItem>
+                            <MenuItem bg={color_shema.card_black} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}} >Medium</MenuItem>
+                            <MenuItem bg={color_shema.card_black} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}} >Low</MenuItem>
+                            <MenuItem bg={color_shema.card_black} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}} >No Filter</MenuItem>
+                        </MenuList>
+                    </Menu>
+                    <Menu>
+                        <MenuButton variant={"filled"} bg={color_shema.card_black} color={"gray.50"} fontWeight={"300"} _hover={{opacity:"1"}} opacity={"0.6"} as={Button} minW={{md: "fit-content",base:"0px"}} w={{base:"full",md:"fit-content"}} leftIcon={<MdSort />} rightIcon={<ChevronDownIcon />}>
+                            Sort
+                        </MenuButton>
+                        <MenuList bg={color_shema.card_black} border={"0px"}>
+                            <MenuItem bg={color_shema.card_black} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}} >Name</MenuItem>
+                            <MenuItem bg={color_shema.card_black} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}} >Date</MenuItem>
+                            <MenuItem bg={color_shema.card_black} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}} >Prority</MenuItem>
+                            <MenuItem bg={color_shema.card_black} color={"gray.50"} opacity={"0.6"} _hover={{opacity:"1"}} >Added Time</MenuItem>
+                        </MenuList>
+                    </Menu>
+                </HStack>
+                
             </HStack> 
             <TaskPannel />
         </VStack>

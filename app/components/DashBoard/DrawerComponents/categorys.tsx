@@ -34,7 +34,7 @@ const DeleteAlert = ({isOpen,cancelRef,onClose,submit}:{isOpen:any,cancelRef:any
         <AlertDialogOverlay >
           <AlertDialogContent bg={color_shema.card_black}>
             <AlertDialogHeader fontSize='lg' fontWeight='400' color={"white"}>
-              Delete Ctaegorys
+              Delete Categorys
             </AlertDialogHeader>
 
             <AlertDialogBody color={"gray.200"} fontWeight={"300"}>
@@ -133,7 +133,7 @@ export const Categorys = ()=>{
             }
           })
         })
-        setTodoTask([...tasks_list])
+        
         categoryDeleted.map((item,index)=>{
             list_category[list_category.indexOf(item)] = ""
             var indexS = categorys_select_list.indexOf(item)
@@ -143,9 +143,17 @@ export const Categorys = ()=>{
         })
         updateCategorys.map((item,index)=>{
             if(list_category[index] != ""){
-                list_category[index] = item
+              if(item != list_category[index]){
+                tasks_list.map((tabs,index)=>{
+                  while(tabs.data.findIndex((i)=>i.category == list_category[index]) > -1){
+                    tabs.data[tabs.data.findIndex((i)=>i.category == list_category[index])].category = item
+                  }
+                })
+              }
+              list_category[index] = item
             }
         })
+        setTodoTask([...tasks_list])
         var list_category_temp = []
         list_category.map((item)=>{
             if(item != ""){

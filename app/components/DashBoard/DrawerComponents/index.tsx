@@ -20,6 +20,7 @@ const selectDeletedCategory = atom([])
 const newCategory = atom([])
 
 import React, { Component } from "react";
+import { drawerIsOpen } from "../DrawerComponent";
 
 export default class Clock extends Component {
   constructor(props) {
@@ -43,7 +44,7 @@ export default class Clock extends Component {
 
   render() {
     return (
-      <div className="clock">
+      <div className="clock md:absolute hidden">
         <div
           className="hour_hand"
           style={{
@@ -102,9 +103,12 @@ export const TimeAndDateAndDailyText = ()=>{
 }
 
 export const Profile = ()=>{
+  const [drawerOpen,setDrawerOpen] = useAtom(drawerIsOpen)
     return (
         <HStack width={"95%"}  borderRadius={"7px"} padding={"10px"} bg={color_shema.card_black} justifyContent={"space-between"} marginTop={"15px"}> 
+            
             <HStack>
+                <IconButton display={{base:"flex",md:"none"}} onClick={()=>{setDrawerOpen(false)}} aria-label="Setting" rounded={"10px"} p={"0px"} bg={"transparent"} _hover={{bg:color_shema.blue,color:"white"}} color={color_shema.blue} borderRadius={"full"} icon={<CloseIcon/>}></IconButton>
                 <Avatar src="https://cdn.drawception.com/images/avatars/647493-B9E.png" rounded={"10px"} ></Avatar>
                 <Text fontSize={"17px"} color={"gray.50"} fontWeight={"bold"} >Mr.Mmmdi</Text>
             </HStack>
